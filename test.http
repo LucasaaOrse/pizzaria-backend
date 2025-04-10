@@ -1,0 +1,185 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUmFmYWVsIiwiZW1haWwiOiJSYWZhZWwuYWFhYUBnbWFpbC5jb20iLCJzdWJqZWN0Ijo0LCJpYXQiOjE3NDQzMTY1MDIsImV4cCI6MTc0NDMyMDEwMn0.ql3gCbGHlDh546mFacjujppY2f-SrDzsgrih1ZR-YG8
+
+### Requisição POST para criar um usuário
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "name": "Rafael",
+  "email": "Rafael.aaaa@gmail.com",
+  "password": "Rafael123"
+  
+}
+
+### Listar todos os usuarios
+GET http://localhost:3000/users
+Content-Type: application/json
+
+
+### Editar usuario
+PUT http://localhost:3000/users/1
+Content-Type: application/json
+
+{
+  "name": "Garbriel",
+  "email": "gabriel.aaaa@gmail.com"
+}
+
+### Deletar usuario
+DELETE http://localhost:3000/users/3
+
+
+### Login
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "email": "Rafael.aaaa@gmail.com",
+    "password": "Rafael123"
+}
+
+### User info
+GET http://localhost:3000/userinfo
+Authorization: Bearer {{token}}
+
+
+### Cadastrar Categoria
+POST http://localhost:3000/category
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Bebidas"
+}
+
+
+### Listar todas as categorias
+GET http://localhost:3000/category
+Authorization: Bearer {{token}}
+
+### Deletar categoria
+DELETE http://localhost:3000/category
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "id": 3
+}
+
+
+
+### Cadastrar Produto
+POST http://localhost:3000/product
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=WebKitFormBoundary
+
+--WebKitFormBoundary
+Content-Disposition: form-data; name="name"
+
+Fanta Laranja 2L
+--WebKitFormBoundary
+Content-Disposition: form-data; name="description"
+
+Refrigerante gelado
+--WebKitFormBoundary
+Content-Disposition: form-data; name="price"
+
+5.90
+--WebKitFormBoundary
+Content-Disposition: form-data; name="category_id"
+
+2
+--WebKitFormBoundary
+Content-Disposition: form-data; name="banner"; filename="FantaLaranja2.jpg"
+Content-Type: image/jpeg
+
+< ./imagem/FantaLaranja2.jpg
+--WebKitFormBoundary--
+
+
+### Pegar produtos Filtado por categoria
+GET http://localhost:3000/product?category=2
+Authorization: Bearer {{token}}
+
+
+### Deletar produto
+DELETE http://localhost:3000/product
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "id": 13
+}
+
+
+
+### Criar Pedido/Order
+POST http://localhost:3000/order
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "table": 15,
+  "name": "João"
+}
+
+### Listar todas Orders
+GET http://localhost:3000/order
+Authorization: Bearer {{token}}
+
+
+### Deletar um Order
+DELETE http://localhost:3000/order?table=2
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+
+### Adicionar um Item
+POST http://localhost:3000/order/add
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "order_id": 13,
+  "product_id": 9,
+  "amount": 2 
+}
+
+
+### Pegar todos os items
+GET http://localhost:3000/order/get
+Authorization: Bearer {{token}}
+
+
+### Remover um Item
+DELETE http://localhost:3000/order/remove?id=11
+Authorization: Bearer {{token}}
+
+
+### Enviar pedido/draft: false
+PUT http://localhost:3000/order/send
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "id": 13 
+}
+
+### Pegar apenas Orders Pendentes draft e Status = false
+GET http://localhost:3000/order/pending
+Authorization: Bearer {{token}}
+
+
+### Pegar os detalhes de uma order especifica
+GET http://localhost:3000/order/details?order_id=12
+Authorization: Bearer {{token}}
+
+
+### Finalizar order/ status = True
+PUT http://localhost:3000/order
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "order_id": 12 
+}
