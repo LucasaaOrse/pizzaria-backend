@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUmFmYWVsIiwiZW1haWwiOiJSYWZhZWwuYWFhYUBnbWFpbC5jb20iLCJzdWJqZWN0Ijo0LCJpYXQiOjE3NDQzMTY1MDIsImV4cCI6MTc0NDMyMDEwMn0.ql3gCbGHlDh546mFacjujppY2f-SrDzsgrih1ZR-YG8
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTHVjYXMiLCJlbWFpbCI6Imx1Y2FzLm9yc2VAYWFhYS5jb20iLCJzdWJqZWN0IjoxLCJpYXQiOjE3NDQzOTE2MjMsImV4cCI6MTc0NDM5NTIyM30.E9-1hByC5smi5r1zR0QK2Zarqr_1xqJ-PDBaqLTMxus
 
 ### Requisição POST para criar um usuário
 POST http://localhost:3000/users
@@ -204,4 +204,14 @@ Content-Type: application/json
     "email": "teste@email.com",
     "password": "123456"
 
+}
+
+### Criar Pedido/Order
+POST https://pizzaria-backend-production-bccd.up.railway.app/order
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "table": 15,
+  "name": "João"
 }

@@ -32,15 +32,18 @@ module.exports = {
 
     const parsedPrice = parseFloat(price.toString().replace(",", "."));
 
-    const [product_id] = await db('products').insert({
-      name,
-      description,
-      price: parsedPrice,
-      banner: uploadResult.secure_url,
-      category_id
-    });
+    const [newProduct] = await db('products')
+  .insert({
+    name,
+    description,
+    price: parsedPrice,
+    banner: uploadResult.secure_url,
+    category_id
+  })
+  .returning('*'); // retorna todas as colunas
 
-    return res.status(201).json({ message: "Produto cadastrado", product_id });
+
+    return res.status(201).json({ message: "Produto cadastrado", newProduct });
   } catch (err) {
     console.error("Erro ao cadastrar produto:", err);
     return res.status(500).json({ error: "Erro interno", details: err.message });
