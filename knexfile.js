@@ -1,16 +1,12 @@
-require("dotenv").config();
-
 module.exports = {
   development: {
-    client: "pg",
-    connection: {
-      connectionString: process.env.DATABASE_URL,
-      ssl: {
-        rejectUnauthorized: false // necessário para o Neon
-      }
-    },
+    client: 'pg',
+    connection: process.env.DATABASE_URL,
     migrations: {
-      directory: "./src/database/migrations"
+      directory: './src/database/migrations',
+    },
+    seeds: {
+      directory: './src/database/seeds',
     }
   }
 }
