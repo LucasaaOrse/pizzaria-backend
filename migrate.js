@@ -1,16 +1,22 @@
-// migrate.js
-const knex = require('knex');
-const config = require('./knexfile');
+const knex = require('./src/database');
 
-const environment = process.env.NODE_ENV || 'development';
-const db = knex(config[environment]);
+async function resetAndMigrate() {
+  try {
+    console.log("🔁 Apagando todas as tabelas...");
+    await knex.raw(`
+      DROP SCHEMA public CASCADE;
+      CREATE SCHEMA public;
+    `);
+    console.log("✅ Tabelas apagadas com sucesso!");
 
-db.migrate.latest()
-  .then(() => {
-    console.log('✅ Migrations executadas com sucesso!');
+    console.log("🚀 Rodando migrations...");
+    await knex.migrate.latest();
+    console.log("✅ Migrations concluídas!");
     process.exit(0);
-  })
-  .catch((err) => {
-    console.error('❌ Erro ao rodar migrations:', err);
+  } catch (err) {
+    console.error("❌ Erro ao resetar e migrar:", err);
     process.exit(1);
-  });
+  }
+}
+
+resetAndMigrate();
