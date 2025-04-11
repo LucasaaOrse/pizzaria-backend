@@ -23,7 +23,8 @@ module.exports = {
             const token = jwt.sign({name: user.name, email: user.email, subject: user.id, }, process.env.SECRET_KEY,  { expiresIn: "1h"})
             return res.status(200).json({menssagem: "Login bem-sucedido", id: user.id, name: user.name, email: user.email, token})
         } catch (error) {
-            return res.status(500).json({error: "Erro do serdidor"})               
+            console.error("Erro no login:", error);
+            return res.status(500).json({ error: "Erro do servidor" });
         }
 
     }
