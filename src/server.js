@@ -9,10 +9,21 @@ const productsRoutes = require('./routes/products/ProductsRoutes')
 const ordersRoutes = require("./routes/orders/ordersRoutes")
 const itemsRoutes = require("./routes/orders/itemsRouter")
 const ordersDetailsRouter = require('./routes/orders/ordersDetailsRouter')
-
+const knex = require('./database'); // seu knexfile.js configurado
 const fileUpload = require('express-fileupload')
 
 
+knex.migrate.latest()
+  .then(() => {
+    console.log('✅ Migrations executadas com sucesso!');
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('❌ Erro ao rodar migrations:', err);
+  });
 
 
 const app = express();
@@ -20,7 +31,7 @@ const PORT = process.env.PORT || 3000;
 
 const cors = require('cors')
 app.use(cors({
-  origin: 'http://localhost:3001', // ou onde o frontend estiver
+ // ou onde o frontend estiver
   credentials: true
 }))
 
