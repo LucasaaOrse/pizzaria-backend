@@ -21,22 +21,22 @@ module.exports = {
     },
 
     deleteOrder: async (req, res, db) => {
-        const { table } = req.query;
+        const { id } = req.query;
 
-        if (!table) {
+        if (!id) {
             return res.status(400).json({ error: "Número da mesa inválido" });
         }
 
         try {
             // Buscar o pedido antes de deletar
-            const orderToDelete = await db("orders").where({ table }).first();
+            const orderToDelete = await db("orders").where({ id }).first();
 
             if (!orderToDelete) {
                 return res.status(404).json({ error: "Pedido não encontrado" });
             }
 
             // Deletar o pedido
-            await db("orders").where({ table }).del();
+            await db("orders").where({ id }).del();
 
             return res.status(200).json({
                 message: "Pedido deletado com sucesso",

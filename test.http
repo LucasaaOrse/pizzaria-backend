@@ -1,4 +1,5 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTHVjYXMiLCJlbWFpbCI6Imx1Y2FzLm9yc2VAYWFhYS5jb20iLCJzdWJqZWN0IjoxLCJpYXQiOjE3NDQzOTE2MjMsImV4cCI6MTc0NDM5NTIyM30.E9-1hByC5smi5r1zR0QK2Zarqr_1xqJ-PDBaqLTMxus
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdGUiLCJlbWFpbCI6InRlc3RlQGVtYWlsLmNvbSIsInN1YmplY3QiOjIsImlhdCI6MTc0NDc0MzgwNSwiZXhwIjoxNzQ0NzQ3NDA1fQ.XfBNrYd7YFVonvfDVqapn4cTJS9nLYfnBIXb7WPGBM8
+
 
 ### Requisição POST para criar um usuário
 POST http://localhost:3000/users
@@ -215,3 +216,31 @@ Content-Type: application/json
   "table": 15,
   "name": "João"
 }
+
+
+### Enviar pedido/draft: false
+PUT https://pizzaria-backend-production-bccd.up.railway.app/order/send
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "id": 1
+}
+
+
+### Adicionar um Item
+POST https://pizzaria-backend-production-bccd.up.railway.app/order/add
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "order_id": 1,
+  "product_id": 1,
+  "amount": 2
+}
+
+
+### Listar todas Orders
+GET https://pizzaria-backend-production-bccd.up.railway.app/order
+Authorization: Bearer {{token}}
+
