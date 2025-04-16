@@ -2,50 +2,53 @@
 module.exports = {
     createItem: async (req, res, db) => {
         const { order_id, product_id, amount } = req.body;
-    
+      
         if (!order_id || !product_id || !amount) {
-            return res.status(400).json({ error: "Informações informadas inválidas" });
+          return res.status(400).json({ error: "Informações informadas inválidas" });
         }
-    
+      
         try {
-            const existingItem = await db("items")
-                .where({ order_id, product_id })
-                .first();
-    
-            if (existingItem) {
-                // Soma a quantidade atual com a nova
-                const newAmount = existingItem.amount + amount;
-    
-                await db("items")
-                    .where({ id: existingItem.id })
-                    .update({ amount: newAmount });
-    
-                const updatedItem = await db("items").where({ id: existingItem.id }).first();
-    
-                return res.status(200).json({
-                    message: "Quantidade atualizada com sucesso",
-                    item: updatedItem
-                });
-            }
-    
-            // Caso não exista, insere novo item
-            const [item_id] = await db('items').insert({
-                amount,
-                order_id,
-                product_id
+          const existingItem = await db("items")
+            .where({ order_id, product_id })
+            .first();
+      
+          if (existingItem) {
+            // Atualiza a quantidade somando a nova
+            const newAmount = existingItem.amount + amount;
+      
+            const [updatedItem] = await db("items")
+              .where({ id: existingItem.id })
+              .update({ amount: newAmount, updated_at: new Date() })
+              .returning("*");
+      
+            return res.status(200).json({
+              message: "Quantidade atualizada com sucesso",
+              item: updatedItem,
             });
-    
-            const newItem = await db('items').where({ id: item_id }).first();
-    
-            return res.status(201).json({
-                message: "Produto adicionado com sucesso",
-                item: newItem
-            });
-    
+          }
+      
+          // Caso não exista, insere um novo item
+          const [newItem] = await db("items")
+            .insert({
+              amount,
+              order_id,
+              product_id,
+            })
+            .returning("*");
+      
+          return res.status(201).json({
+            message: "Item adicionado com sucesso",
+            item: newItem,
+          });
+      
         } catch (error) {
-            return res.status(500).json({ error: "Erro ao adicionar produto", details: error.message });
+          console.error("Erro ao adicionar item:", error);
+          return res.status(500).json({
+            error: "Erro ao adicionar produto",
+            details: error.message,
+          });
         }
-    },    
+      },          
 
     removeItem: async (req, res, db) => {
         const { id, decrement } = req.query;
