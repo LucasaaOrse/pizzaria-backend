@@ -5,8 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node src/server.js",
-    "migrate": "node migrate.js",
-    "start": "npm run migrate && node src/server.js"
+    "start": "node src/server.js",
+    "reset": "node migrate.js"
   
   },
   "keywords": [],
