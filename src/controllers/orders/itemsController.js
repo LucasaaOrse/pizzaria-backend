@@ -38,7 +38,7 @@ module.exports = {
       
           return res.status(201).json({
             message: "Item adicionado com sucesso",
-            newItem,
+            id: newItem.id,
           });
       
         } catch (error) {
@@ -74,7 +74,7 @@ module.exports = {
                 const updatedItem = await db("items").where({ id }).first();
                 return res.status(200).json({
                     message: "Quantidade reduzida com sucesso",
-                    updatedItem
+                    id: updatedItem.order_id
                 });
             }
     
