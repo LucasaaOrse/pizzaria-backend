@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdGUiLCJlbWFpbCI6InRlc3RlQGVtYWlsLmNvbSIsInN1YmplY3QiOjIsImlhdCI6MTc0NDc0MzgwNSwiZXhwIjoxNzQ0NzQ3NDA1fQ.XfBNrYd7YFVonvfDVqapn4cTJS9nLYfnBIXb7WPGBM8
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdGUiLCJlbWFpbCI6InRlc3RlQGVtYWlsLmNvbSIsInN1YmplY3QiOjIsImlhdCI6MTc0NDc1MDAzNiwiZXhwIjoxNzQ0NzUzNjM2fQ.Bhgc90V2w46f79LY42GljlROl7AH5fqTr8WNJeySgr0
 
 
 ### Requisição POST para criar um usuário
@@ -244,3 +244,7 @@ Content-Type: application/json
 GET https://pizzaria-backend-production-bccd.up.railway.app/order
 Authorization: Bearer {{token}}
 
+### Deletar um Order
+DELETE https://pizzaria-backend-production-bccd.up.railway.app/order?id=3
+Authorization: Bearer {{token}}
+//Content-Type: multipart/form-data; boundary=----WebKitFormBoundary

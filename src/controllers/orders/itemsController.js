@@ -48,22 +48,40 @@ module.exports = {
     },    
 
     removeItem: async (req, res, db) => {
-    const { id } = req.query; // Obtém o ID da query string
-
-    try {
-        // Primeiro, busca o item para capturar os dados antes de deletar
-        const item = await db('items').where({ id }).first();
-        
-        if (!item) {
-            return res.status(404).json({ error: "Item não encontrado" });
+        const { id, decrement } = req.query;
+    
+        if (!id) {
+            return res.status(400).json({ error: "ID do item não informado" });
         }
-
-        // Agora deleta o item
-        await db('items').where({ id }).del();
-
-            return res.status(200).json({ message: "Pedido deletado com sucesso", item });
+    
+        try {
+            const item = await db("items").where({ id }).first();
+    
+            if (!item) {
+                return res.status(404).json({ error: "Item não encontrado" });
+            }
+    
+            if (decrement && item.amount > 1) {
+                const newAmount = item.amount - 1;
+    
+                await db("items")
+                    .where({ id })
+                    .update({ amount: newAmount });
+    
+                const updatedItem = await db("items").where({ id }).first();
+                return res.status(200).json({
+                    message: "Quantidade reduzida com sucesso",
+                    item: updatedItem
+                });
+            }
+    
+            // Se amount == 1 ou não tiver decrement flag, remove o item
+            await db("items").where({ id }).del();
+    
+            return res.status(200).json({ message: "Item removido com sucesso" });
+    
         } catch (error) {
-            return res.status(500).json({ error: "Erro ao remover pedido", details: error.message });
+            return res.status(500).json({ error: "Erro ao remover item", details: error.message });
         }
     },
 
