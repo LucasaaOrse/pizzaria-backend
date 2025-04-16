@@ -50,8 +50,8 @@ module.exports = {
         }
       },          
 
-    removeItem: async (req, res, db) => {
-        const { id, decrement } = req.query;
+      removeItem: async (req, res, db) => {
+        const { id } = req.query;
     
         if (!id) {
             return res.status(400).json({ error: "ID do item não informado" });
@@ -64,21 +64,17 @@ module.exports = {
                 return res.status(404).json({ error: "Item não encontrado" });
             }
     
-            if (decrement && item.amount > 1) {
-                const newAmount = item.amount - 1;
-    
+            if (item.amount > 1) {
                 await db("items")
                     .where({ id })
-                    .update({ amount: newAmount });
+                    .update({ amount: item.amount - 1 });
     
-                const updatedItem = await db("items").where({ id }).first();
                 return res.status(200).json({
                     message: "Quantidade reduzida com sucesso",
-                    id: updatedItem.order_id
+                    id: item.order_id
                 });
             }
     
-            // Se amount == 1 ou não tiver decrement flag, remove o item
             await db("items").where({ id }).del();
     
             return res.status(200).json({ message: "Item removido com sucesso" });

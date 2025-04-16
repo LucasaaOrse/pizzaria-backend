@@ -153,7 +153,7 @@ Authorization: Bearer {{token}}
 
 
 ### Remover um Item
-DELETE http://localhost:3000/order/remove?id=11
+DELETE http://localhost:3000/?id=11
 Authorization: Bearer {{token}}
 
 
