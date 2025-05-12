@@ -61,7 +61,7 @@ module.exports = {
 
     sendOrder: async (req, res, db) => {
         const { id } = req.body;
-        console.log("ID do pedido:", router.params.order_id);
+        console.log("ID do pedido:", id);
         try {
             const order = await db('orders').where({ id }).first();
         
