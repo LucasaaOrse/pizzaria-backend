@@ -297,3 +297,16 @@ Authorization: Bearer {{token}}
 ### Listar estoque
 GET https://pizzaria-backend-production-bccd.up.railway.app/ingredients
 Authorization: Bearer {{token}}
+
+### remover do estoque
+POST https://pizzaria-backend-production-bccd.up.railway.app/recipes/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "ingredients": [
+    { "ingredient_id": 1, "quantity": 500 },
+    { "ingredient_id": 2, "quantity": 25 },
+    { "ingredient_id": 3, "quantity": 300 }
+  ]
+}

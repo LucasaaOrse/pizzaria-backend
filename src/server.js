@@ -10,6 +10,7 @@ const ordersRoutes = require("./routes/orders/ordersRoutes");
 const itemsRoutes = require("./routes/orders/itemsRouter");
 const ordersDetailsRouter = require('./routes/orders/ordersDetailsRouter');
 const ingredientsRoutes = require('./routes/ingredients/IngredientsRoutes')
+const recipesRoutes = require('./routes/recipes/RecipesRoutes')
 const knex = require('./database');
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
@@ -39,6 +40,7 @@ app.use('/order/get', isAuth, itemsRoutes(db));
 app.use('/order/remove', isAuth, itemsRoutes(db));
 app.use('/order/details', isAuth, ordersDetailsRouter(db));
 app.use('/ingredients', isAuth, ingredientsRoutes(db))
+app.use('/recipes', isAuth, recipesRoutes(db))
 
 // 🔄 Só inicia o servidor se as migrations forem executadas
 knex.migrate.latest()
