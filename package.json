@@ -7,7 +7,6 @@
     "dev": "ts-node src/server.js",
     "start": "node src/server.js",
     "reset": "node migrate.js"
-  
   },
   "keywords": [],
   "author": "",
@@ -24,6 +23,7 @@
     "knex": "^3.1.0",
     "multer": "^1.4.5-lts.2",
     "pg": "^8.14.1",
+    "socket.io": "^4.8.1",
     "sqlite3": "^5.1.7"
   }
 }
