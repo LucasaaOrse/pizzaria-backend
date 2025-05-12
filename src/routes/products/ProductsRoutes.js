@@ -15,7 +15,7 @@ module.exports = (db) =>{
     }),
 
     router.get("/", async (req, res) => {
-        await ProductsController.getProductCategory(req, res, db)
+        await ProductsController.listByCategoryWithAvailability(req, res, db)
     }),
 
     router.delete("/", async (req, res) => {
