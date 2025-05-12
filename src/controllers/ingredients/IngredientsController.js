@@ -13,7 +13,7 @@ module.exports = {
   async create(req, res, db) {
     const { name, unit, quantity } = req.body
 
-    if(!name || !unit || !quantity == null ){
+    if(!name || !unit || !quantity === undefined ){
       return res.status(400).json({error: "Todos os campos são obrigatorios"})
     }
 

@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdGUiLCJlbWFpbCI6InRlc3RlQGVtYWlsLmNvbSIsInN1YmplY3QiOjEsImlhdCI6MTc0NDgxODY1NiwiZXhwIjoxNzQ0ODIyMjU2fQ.mSeYfRfvbMEaHSZMZcNSlbtGejcuLiat7xFV1UdYQhc
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdGUiLCJlbWFpbCI6InRlc3RlQGVtYWlsLmNvbSIsInN1YmplY3QiOjIsImlhdCI6MTc0NzA2Njg0NywiZXhwIjoxNzQ3MDcwNDQ3fQ.Q4timp8iBEk-5W79R9JB_kERhZPkTHkq0jDSmEF6qig
 
 
 ### Requisição POST para criar um usuário
@@ -262,3 +262,15 @@ Authorization: Bearer {{token}}
 ### Pegar produtos Filtado por categoria
 GET https://pizzaria-backend-production-bccd.up.railway.app/product?category=1
 Authorization: Bearer {{token}}
+
+
+### Criar ingredient
+POST https://pizzaria-backend-production-bccd.up.railway.app/ingredients
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "farinha de trigo",
+  "unit": "g",
+  "quantity": 10000
+}
