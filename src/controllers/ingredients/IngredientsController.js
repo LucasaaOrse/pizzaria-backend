@@ -80,7 +80,7 @@ module.exports = {
 
       const newQuantity = Number(ingredient.quantity) - Number(quantity)
 
-      await db('ingredients').where({id}).uptade({quantity: newQuantity})
+      await db('ingredients').where({id}).update({quantity: newQuantity})
 
       return res.json({id, name: ingredient.name, newQuantity})
 

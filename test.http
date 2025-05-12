@@ -276,8 +276,17 @@ Authorization: Bearer {{token}}
   "quantity": 10000
 }
 
-### Criar ingredient
+### Adicionar ao estoque
 PATCH  https://pizzaria-backend-production-bccd.up.railway.app/ingredients/1/add
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "quantity": 500
+}
+
+### remover do estoque
+PATCH  https://pizzaria-backend-production-bccd.up.railway.app/ingredients/1/remove
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
