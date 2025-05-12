@@ -12,11 +12,11 @@ module.exports = (db) => {
     await IngredientsController.create(req, res, db)
   }),
 
-  router.put('/:id/add', async (req, res) => {
+  router.patch('/:id/add', async (req, res) => {
     await IngredientsController.addStock(req, res, db)
   })
 
-  router.put('/:id/remove', async (req, res) => {
+  router.patch('/:id/remove', async (req, res) => {
     await IngredientsController.removeStock(req, res, db)
   })
 

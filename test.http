@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdGUiLCJlbWFpbCI6InRlc3RlQGVtYWlsLmNvbSIsInN1YmplY3QiOjIsImlhdCI6MTc0NzA2NzY2MCwiZXhwIjoxNzQ3MDcxMjYwfQ.XQVlwJOj_1JI1JEbRkJ9J8KOyE5K-Qf4LpG-E5ZctcM
+
 
 
 ### Requisição POST para criar um usuário
@@ -185,6 +185,8 @@ Content-Type: application/json
   "order_id": 12 
 }
 
+###
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdGUiLCJlbWFpbCI6InRlc3RlQGVtYWlsLmNvbSIsInN1YmplY3QiOjIsImlhdCI6MTc0NzA2NzkwMywiZXhwIjoxNzQ3MDcxNTAzfQ.0bkVWdYHWLL40TL3Ao0ZivonZjUTljhtS_4X9nv8Pnw
 
 ###
 POST https://pizzaria-backend-production-bccd.up.railway.app/users
@@ -276,7 +278,7 @@ Authorization: Bearer {{token}}
 }
 
 ### Criar ingredient
-PUT https://pizzaria-backend-production-bccd.up.railway.app/ingredients/1/add
+PATCH  https://pizzaria-backend-production-bccd.up.railway.app/ingredients/1/add
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
