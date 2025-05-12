@@ -186,7 +186,7 @@ Content-Type: application/json
 }
 
 ###
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdGUiLCJlbWFpbCI6InRlc3RlQGVtYWlsLmNvbSIsInN1YmplY3QiOjIsImlhdCI6MTc0NzA3MDE1MywiZXhwIjoxNzQ3MDczNzUzfQ.z_Y-YZ4qtN0fYeTuEBx_Nsw75mivOWvR-GWp1uc6teE
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdGUiLCJlbWFpbCI6InRlc3RlQGVtYWlsLmNvbSIsInN1YmplY3QiOjIsImlhdCI6MTc0NzA3NzA1MSwiZXhwIjoxNzQ3MDgwNjUxfQ.Njz3R1lbEOOZbam_LHZOLficknAn8ku0cB3kz3QW_ko
 ###
 POST https://pizzaria-backend-production-bccd.up.railway.app/users
 Content-Type: application/json
@@ -271,7 +271,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "farinha de trigo",
+  "name": "Molho",
   "unit": "g",
   "quantity": 10000
 }
@@ -298,7 +298,7 @@ Authorization: Bearer {{token}}
 GET https://pizzaria-backend-production-bccd.up.railway.app/ingredients
 Authorization: Bearer {{token}}
 
-### remover do estoque
+### Adicionar receita
 POST https://pizzaria-backend-production-bccd.up.railway.app/recipes/1
 Content-Type: application/json
 Authorization: Bearer {{token}}

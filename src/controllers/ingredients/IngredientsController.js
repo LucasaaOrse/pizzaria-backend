@@ -13,8 +13,8 @@ module.exports = {
   async create(req, res, db) {
     const { name, unit, quantity } = req.body
 
-    if(!name || !unit || !quantity === undefined ){
-      return res.status(400).json({error: "Todos os campos são obrigatorios"})
+    if (!name || !unit || quantity === undefined) {
+      return res.status(400).json({ error: "Todos os campos são obrigatórios" });
     }
 
     try {
@@ -23,11 +23,8 @@ module.exports = {
         return res.status(400).json({error: "Ingrediente já cadastrado"})
       }  
       
-      const [id] = await db('ingredients').insert({
-        name,
-        unit,
-        quantity
-      })
+      const id = await db('ingredients').insert({ name, unit, quantity });
+
       return res.status(200).json({id, name, unit, quantity})
 
     } catch (error) {
