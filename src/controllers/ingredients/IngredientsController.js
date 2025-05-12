@@ -51,12 +51,12 @@ module.exports = {
 
       const newQuantity = Number(ingredient.quantity) + Number(quantity)
 
-      await db('ingredients').where({id}).update({quantity: newQuantity})
+      await db('ingredients').where({id}).updae({quantity: newQuantity})
 
-      return res.status({id, name: ingredient.name, newQuantity})
+      return res.status(200).json({ id, name: ingredient.name, newQuantity });
 
     } catch (error) {
-      return res.status(200).json({ id, name: ingredient.name, newQuantity });
+      return res.status(500).json({èrror: "Erro do servidor", details: error.message})
     }
   },
 
