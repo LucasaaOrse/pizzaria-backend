@@ -56,7 +56,7 @@ module.exports = {
       return res.status({id, name: ingredient.name, newQuantity})
 
     } catch (error) {
-      return res.status(500).json({èrror: "Erro do servidor", details: error.message})
+      return res.status(200).json({ id, name: ingredient.name, newQuantity });
     }
   },
 

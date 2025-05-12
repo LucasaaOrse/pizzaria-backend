@@ -186,7 +186,7 @@ Content-Type: application/json
 }
 
 ###
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdGUiLCJlbWFpbCI6InRlc3RlQGVtYWlsLmNvbSIsInN1YmplY3QiOjIsImlhdCI6MTc0NzA2NzkwMywiZXhwIjoxNzQ3MDcxNTAzfQ.0bkVWdYHWLL40TL3Ao0ZivonZjUTljhtS_4X9nv8Pnw
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdGUiLCJlbWFpbCI6InRlc3RlQGVtYWlsLmNvbSIsInN1YmplY3QiOjIsImlhdCI6MTc0NzA2ODI1NCwiZXhwIjoxNzQ3MDcxODU0fQ.DKIWyjMK_ImZ7yCbsWbeQcYxSHE5ksZqEIQUfFZmkoc
 
 ###
 POST https://pizzaria-backend-production-bccd.up.railway.app/users
