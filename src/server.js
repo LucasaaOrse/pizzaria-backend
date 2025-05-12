@@ -31,7 +31,7 @@ io.on("connection", (socket) => {
   console.log("Cliente conectado:", socket.id);
 });
 
-export { server, io };
+module.exports = { server, io };
 
 // CORS
 app.use(cors({
