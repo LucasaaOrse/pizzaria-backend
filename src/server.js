@@ -1,6 +1,6 @@
 const express = require('express');
-import { Server } from "socket.io";
-import http from "http";
+const { Server } = require("socket.io");
+const http = require("http");
 const db = require('./database'); // Importa a conexão com o banco de dados
 const userRoutes = require('./routes/users/UserRoutes');
 const authRoutes = require("./routes/users/AuthRouter");
