@@ -1,12 +1,12 @@
 
 
 module.exports = {
-  async index(req, res) {
+  async index(req, res, db) {
     try {
       const ingredients = await db('ingredients').select('*').orderBy('name');
       return res.json(ingredients);
-    } catch (err) {
-      return res.status(500).json({ error: 'Erro ao listar ingredientes' });
+    } catch (error) {
+      return res.status(500).json({ error: 'Erro ao listar ingredientes', details: error.message });
     }
   },
 
