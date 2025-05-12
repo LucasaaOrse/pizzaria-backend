@@ -1,4 +1,6 @@
 const express = require('express');
+import { Server } from "socket.io";
+import http from "http";
 const db = require('./database'); // Importa a conexão com o banco de dados
 const userRoutes = require('./routes/users/UserRoutes');
 const authRoutes = require("./routes/users/AuthRouter");
@@ -16,7 +18,20 @@ const fileUpload = require('express-fileupload');
 const cors = require('cors');
 
 const app = express(); // 🔄 Corrigido: app criado antes
+const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
+
+const io = new Server(server, {
+  cors: {
+    origin: "*", // ajuste conforme necessário
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("Cliente conectado:", socket.id);
+});
+
+export { server, io };
 
 // CORS
 app.use(cors({

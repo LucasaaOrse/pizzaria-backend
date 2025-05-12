@@ -1,4 +1,4 @@
-
+const { io } = require('../../server');
 
 module.exports = {
     createOrder: async (req, res, db) =>{
@@ -59,25 +59,34 @@ module.exports = {
 
     },
 
-    sendOrder: async (req, res, db) =>{
-        const { id } = req.body
+    sendOrder: async (req, res, db) => {
+  const { id } = req.body;
 
-        try {
-            const order = await db('orders').where({ id }).first();
-            
-            if(!order){
-                return res.status(404).json({ error: "Pedido não existe" })
-            }
+  try {
+    const order = await db('orders').where({ id }).first();
+    
+    if (!order) {
+      return res.status(404).json({ error: "Pedido não existe" });
+    }
 
-            await db('orders').where({ id }).update({ draft: false})
-            
-            const updateOrder = await db('orders').where({ id }).first()
+    await db('orders').where({ id }).update({ draft: false });
 
-            return res.status(200).json({ message: "Pedido enviado com sucesso", order: updateOrder })
-        } catch (error) {
-            return res.status(500).json({error: "Erro ao enviar pedido", details: error.message})            
-        }
-    },
+    const updateOrder = await db('orders').where({ id }).first();
+
+    // 🔥 Emite o evento para todos os clientes conectados
+    io.emit('newOrder', updateOrder);
+
+    return res.status(200).json({
+      message: "Pedido enviado com sucesso",
+      order: updateOrder,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erro ao enviar pedido",
+      details: error.message,
+    });
+  }
+},
 
     getPendingOrders: async (req, res, db) =>{
 

@@ -186,7 +186,7 @@ Content-Type: application/json
 }
 
 ###
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdGUiLCJlbWFpbCI6InRlc3RlQGVtYWlsLmNvbSIsInN1YmplY3QiOjIsImlhdCI6MTc0NzA4MDY2OCwiZXhwIjoxNzQ3MDg0MjY4fQ.lfQaxGkswRQrq6MBXncWjisCz0ISqSZA19JBsxIbvHM
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdGUiLCJlbWFpbCI6InRlc3RlQGVtYWlsLmNvbSIsInN1YmplY3QiOjIsImlhdCI6MTc0NzA4NDQyOSwiZXhwIjoxNzQ3MDg4MDI5fQ._zJ-IQWv4klOLvh4SHqBGWy0OpR7G6DZM3-pVidJVG8
 ###
 POST https://pizzaria-backend-production-bccd.up.railway.app/users
 Content-Type: application/json
@@ -290,12 +290,12 @@ Authorization: Bearer {{token}}
 }
 
 ### remover do estoque
-PATCH  https://pizzaria-backend-production-bccd.up.railway.app/ingredients/1/remove
+PATCH  https://pizzaria-backend-production-bccd.up.railway.app/ingredients/4/remove
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "quantity": 600
+  "quantity": 800
 }
 
 ### Listar estoque
@@ -303,7 +303,7 @@ GET https://pizzaria-backend-production-bccd.up.railway.app/ingredients
 Authorization: Bearer {{token}}
 
 ### Adicionar receita
-POST https://pizzaria-backend-production-bccd.up.railway.app/recipes/1
+POST https://pizzaria-backend-production-bccd.up.railway.app/recipes/2
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -311,11 +311,11 @@ Authorization: Bearer {{token}}
   "ingredients": [
     { "ingredient_id": 1, "quantity": 500 },
     { "ingredient_id": 2, "quantity": 25 },
-    { "ingredient_id": 3, "quantity": 300 }
+    { "ingredient_id": 4, "quantity": 300 }
   ]
 }
 
 ### Listar receita
-GET https://pizzaria-backend-production-bccd.up.railway.app/recipes/1
+GET https://pizzaria-backend-production-bccd.up.railway.app/recipes/2
 Content-Type: application/json
 Authorization: Bearer {{token}}
