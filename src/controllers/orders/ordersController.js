@@ -106,9 +106,9 @@ module.exports = {
       await db('orders').where({ id: order_id }).update({ status: true });
       const orderUpdate = await db('orders').where({ id: order_id }).first();
 
+      const io = getIO(); // ✅ PEGAR a instância correta do socket
       console.log("Pedido finalizado, emitindo evento orderFinished:", order_id);
-      // Emite um evento para todos os clientes
-      io.emit("orderFinished", { id: order_id });
+      io.emit("orderFinished", { id: order_id }); // ✅ Agora vai funcionar!
 
       return res.status(200).json({
         message: "Pedido finalizado com sucesso",
