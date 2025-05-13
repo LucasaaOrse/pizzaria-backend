@@ -1,63 +1,54 @@
+// server.js
 const express = require('express');
-const { Server } = require("socket.io");
-const http = require("http");
-const db = require('./database'); // Importa a conexão com o banco de dados
-const userRoutes = require('./routes/users/UserRoutes');
-const authRoutes = require("./routes/users/AuthRouter");
-const detailsRoutes = require("./routes/DetailsRouter");
-const isAuth = require("./middleware/isAuth");
-const categoryRoutes = require("./routes/categorys/CategoryRoutes");
-const productsRoutes = require('./routes/products/ProductsRoutes');
-const ordersRoutes = require("./routes/orders/ordersRoutes");
-const itemsRoutes = require("./routes/orders/itemsRouter");
-const ordersDetailsRouter = require('./routes/orders/ordersDetailsRouter');
-const ingredientsRoutes = require('./routes/ingredients/IngredientsRoutes')
-const recipesRoutes = require('./routes/recipes/RecipesRoutes')
-const knex = require('./database');
-const fileUpload = require('express-fileupload');
+const http = require('http');
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
+const knex = require('./database');
 
-const app = express(); // 🔄 Corrigido: app criado antes
+// Cria app e server HTTP
+const app = express();
 const server = http.createServer(app);
-const PORT = process.env.PORT || 3000;
 
-const io = new Server(server, {
-  cors: {
-    origin: "*", // ajuste conforme necessário
-  },
-});
+// Configura CORS para permitir seu frontend
+app.use(cors({ origin: ['*'], credentials: true }));
+app.options('*', cors());
 
-io.on("connection", (socket) => {
-  console.log("Cliente conectado:", socket.id);
-});
-
-module.exports = { server, io };
-
-// CORS
-app.use(cors({
-  origin: '*', // 🔄 Ajuste conforme necessário
-  credentials: true
-}));
-
-app.use(fileUpload());
+// Body parsing
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(fileUpload());
+
+// Importa e inicializa Socket.IO via módulo separado
+const { initSocket } = require('./socket');
+const io = initSocket(server);
 
 // Rotas
-app.use('/users', userRoutes(db));
-app.use('/login', authRoutes(db));
-app.use('/userinfo', isAuth, detailsRoutes(db));
-app.use('/category', isAuth, categoryRoutes(db));
-app.use('/product', isAuth, productsRoutes(db));
-app.use('/order', isAuth, ordersRoutes(db));
-app.use('/order/add', isAuth, itemsRoutes(db));
-app.use('/order/get', isAuth, itemsRoutes(db));
-app.use('/order/remove', isAuth, itemsRoutes(db));
-app.use('/order/details', isAuth, ordersDetailsRouter(db));
-app.use('/ingredients', isAuth, ingredientsRoutes(db))
-app.use('/recipes', isAuth, recipesRoutes(db))
+const userRoutes = require('./routes/users/UserRoutes');
+const authRoutes = require('./routes/users/AuthRouter');
+const detailsRoutes = require('./routes/DetailsRouter');
+const isAuth = require('./middleware/isAuth');
+const categoryRoutes = require('./routes/categorys/CategoryRoutes');
+const productsRoutes = require('./routes/products/ProductsRoutes');
+const ordersRoutes = require('./routes/orders/ordersRoutes');
+const itemsRoutes = require('./routes/orders/itemsRouter');
+const ordersDetailsRouter = require('./routes/orders/ordersDetailsRouter');
+const ingredientsRoutes = require('./routes/ingredients/IngredientsRoutes');
+const recipesRoutes = require('./routes/recipes/RecipesRoutes');
 
-// 🔄 Só inicia o servidor se as migrations forem executadas
+app.use('/users', userRoutes(knex));
+app.use('/login', authRoutes(knex));
+app.use('/userinfo', isAuth, detailsRoutes(knex));
+app.use('/category', isAuth, categoryRoutes(knex));
+app.use('/product', isAuth, productsRoutes(knex));
+app.use('/order', isAuth, ordersRoutes(knex));
+app.use('/order/add', isAuth, itemsRoutes(knex));
+app.use('/order/get', isAuth, itemsRoutes(knex));
+app.use('/order/remove', isAuth, itemsRoutes(knex));
+app.use('/order/details', isAuth, ordersDetailsRouter(knex));
+app.use('/ingredients', isAuth, ingredientsRoutes(knex));
+app.use('/recipes', isAuth, recipesRoutes(knex));
+
+// Inicia o server HTTP (não app.listen)
 knex.migrate.latest()
   .then(() => {
     console.log('✅ Migrations executadas com sucesso!');
@@ -65,6 +56,4 @@ knex.migrate.latest()
       console.log(`🚀 Server running on http://localhost:${PORT}`);
     });
   })
-  .catch((err) => {
-    console.error('❌ Erro ao rodar migrations:', err);
-  });
+  .catch(err => console.error('❌ Erro ao rodar migrations:', err));
