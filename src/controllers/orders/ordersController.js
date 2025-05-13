@@ -108,7 +108,7 @@ module.exports = {
 
       console.log("Pedido finalizado, emitindo evento orderFinished:", order_id);
       // Emite um evento para todos os clientes
-      getIO().emit('orderFinished', { id: order_id });
+      io.emit("orderFinished", { id: order_id });
 
       return res.status(200).json({
         message: "Pedido finalizado com sucesso",
