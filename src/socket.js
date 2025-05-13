@@ -9,10 +9,13 @@ function initSocket(server) {
 
     // Quando um cliente entra em uma sala (ex: "mesa-10")
     socket.on("joinRoom", ({ room }) => {
-      socket.join(room);
+      const roomId = String(room); // força string
       console.log(`Socket ${socket.id} entrou na sala ${room}`);
+      socket.join(roomId);
     });
 
+
+     
     // Quando um cliente envia uma mensagem
     socket.on("sendMessage", ({ room, author, message }) => {
       const payload = { author, message, timestamp: Date.now() };
