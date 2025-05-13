@@ -13,8 +13,10 @@ const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 
 const allowedOrigins = [
-  'http://localhost:8081',  // seu Expo/React Native local
-  'https://pizzaria-frontend-j4ynd0rb9-lucasaaorses-projects.vercel.app'
+  'http://localhost:8081',  // Expo / React Native local
+  'https://pizzaria-frontend-rho.vercel.app',            // seu front anterior
+  'https://pizzaria-frontend-j4ynd0rb9-lucasaaorses-projects.vercel.app',  // seu novo domínio
+  'https://pizzaria-frontend-2plr69jy7-lucasaaorses-projects.vercel.app'   // inclua este também!
 ];
 
 app.use(cors({
