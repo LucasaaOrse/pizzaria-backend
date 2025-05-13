@@ -34,33 +34,53 @@ module.exports = {
     }
   },
 
-    deleteOrder: async (req, res, db) => {
-        const { id } = req.query;
+    deleteOrders: async (req, res, db) => {
+    const { ids } = req.body;
 
-        if (!id) {
-            return res.status(400).json({ error: "Número da mesa inválido" });
-        }
+    // Validação básica
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res
+        .status(400)
+        .json({ error: "Envie um array de IDs não vazio no campo 'ids'." });
+    }
 
-        try {
-            // Buscar o pedido antes de deletar
-            const orderToDelete = await db("orders").where({ id }).first();
+    // Converter para números (caso venham como string)
+    const parsedIds = ids.map((i) => Number(i)).filter((i) => !isNaN(i));
 
-            if (!orderToDelete) {
-                return res.status(404).json({ error: "Pedido não encontrado" });
-            }
+    if (parsedIds.length === 0) {
+      return res
+        .status(400)
+        .json({ error: "IDs inválidos no array." });
+    }
 
-            // Deletar o pedido
-            await db("orders").where({ id }).del();
+    try {
+      // Busca as orders antes de deletar
+      const ordersToDelete = await db("orders")
+        .whereIn("id", parsedIds);
 
-            return res.status(200).json({
-                message: "Pedido deletado com sucesso",
-                order: orderToDelete
-            });
+      if (ordersToDelete.length === 0) {
+        return res
+          .status(404)
+          .json({ error: "Nenhuma order encontrada com esses IDs." });
+      }
 
-        } catch (error) {
-            return res.status(500).json({ error: "Erro ao deletar pedido", details: error.message });
-        }
-    },
+      // Deleta de fato
+      await db("orders")
+        .whereIn("id", parsedIds)
+        .del();
+
+      return res.status(200).json({
+        message: "Orders deletadas com sucesso",
+        deleted: ordersToDelete.length,
+        orders: ordersToDelete
+      });
+    } catch (error) {
+      console.error("Erro ao deletar orders:", error);
+      return res
+        .status(500)
+        .json({ error: "Erro ao deletar orders", details: error.message });
+    }
+  },
 
     getAllOrders: async (req, res, db) =>{
         

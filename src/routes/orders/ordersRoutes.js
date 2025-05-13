@@ -10,8 +10,8 @@ module.exports = (db) =>{
         await OrderController.createOrder(req, res, db)
     } ),
 
-    router.delete("/", async (req, res) =>{
-        await OrderController.deleteOrder(req, res, db)
+    router.delete("/bulk", async (req, res) =>{
+        await OrderController.deleteOrders(req, res, db)
     }),
 
     router.get("/", async (req, res) =>{
