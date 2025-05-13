@@ -106,6 +106,7 @@ module.exports = {
       await db('orders').where({ id: order_id }).update({ status: true });
       const orderUpdate = await db('orders').where({ id: order_id }).first();
 
+      console.log("Pedido finalizado, emitindo evento orderFinished:", order_id);
       // Emite um evento para todos os clientes
       getIO().emit('orderFinished', { id: order_id });
 
