@@ -10,6 +10,8 @@ const knex = require('./database');
 const app = express();
 const server = http.createServer(app);
 
+const PORT = process.env.PORT || 3000;
+
 // 1️⃣ Aplique CORS **antes** de tudo  
 app.use(cors({
   origin: ['*'], // seu Expo/React Native
