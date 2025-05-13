@@ -19,19 +19,22 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    // permitir requests sem origin (ex: mobile apps nativos) ou do allowedOrigins
-    if (!origin || allowedOrigins.includes(origin)) {
+    // Se não houver origin (ex: Postman, mobile nativo), permita
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      // Reflita o Origin de volta como Access-Control-Allow-Origin
       return callback(null, true);
     }
-    callback(new Error('Não permitido pelo CORS'));
+    // Caso contrário, bloqueie
+    return callback(new Error('Não permitido pelo CORS'), false);
   },
   methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'], // headers que você usa
   credentials: true
 }));
-app.options('*', cors({
-  origin: allowedOrigins,
-  credentials: true
-}));
+
+// Habilita preflight para todas as rotas
+app.options('*', cors());
 
 // 2️⃣ Body parser
 app.use(express.json());
