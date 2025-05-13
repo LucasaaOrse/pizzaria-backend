@@ -61,7 +61,7 @@ app.use('/recipes', isAuth, recipesRoutes(db))
 knex.migrate.latest()
   .then(() => {
     console.log('✅ Migrations executadas com sucesso!');
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
     });
   })
