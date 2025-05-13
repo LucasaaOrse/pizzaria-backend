@@ -1,24 +1,38 @@
 const { getIO } = require('../../socket');
 
 module.exports = {
-    createOrder: async (req, res, db) =>{
-        const { table, name } = req.body
+    createOrder: async (req, res, db) => {
+    const { table, name } = req.body;
 
-        if (!table || typeof table !== "number") {
-            return res.status(400).json({ error: "Número de mesa inválido" });
-        }
-        try {
-            const [newOrder] = await db('orders').insert({ table: table, name: name || null }).returning("*")
+    if (!table || typeof table !== "number") {
+      return res.status(400).json({ error: "Número de mesa inválido" });
+    }
 
-            newOrder.status = Boolean(newOrder.status);
-            newOrder.draft = Boolean(newOrder.draft);
+    try {
+      // Insere com draft=true (pedido ainda em montagem) e status=false (não finalizado)
+      const [newOrder] = await db('orders')
+        .insert({ table, name: name || null, draft: true, status: false })
+        .returning("*");
 
-            res.status(201).json({ message: "Pedido feito com sucesso", order: newOrder })
-        } catch (error) {
-            console.log("Erro ao criar pedido")
-            return res.status(500).json({error: "Erro ao criar pedido", details: error.message})
-        }
-    },
+      // Normaliza booleans
+      newOrder.status = Boolean(newOrder.status);
+      newOrder.draft  = Boolean(newOrder.draft);
+
+      // Emite para todos os clientes conectados (cozinha) que há um novo pedido
+      const io = getIO();
+      io.emit('newOrder', newOrder);
+      console.log('Emitido newOrder para sala geral:', newOrder.id);
+
+      return res
+        .status(201)
+        .json({ message: "Pedido feito com sucesso", order: newOrder });
+    } catch (error) {
+      console.error("Erro ao criar pedido:", error);
+      return res
+        .status(500)
+        .json({ error: "Erro ao criar pedido", details: error.message });
+    }
+  },
 
     deleteOrder: async (req, res, db) => {
         const { id } = req.query;
@@ -80,20 +94,23 @@ module.exports = {
     }
   },
 
-    getPendingOrders: async (req, res, db) =>{
+    getPendingOrders: async (req, res, db) => {
+    try {
+      // Traz tudo que ainda não foi finalizado (status = false),
+      // seja em montagem (draft = true) ou já confirmado (draft = false)
+      const pendingOrders = await db('orders')
+        .where({ status: false })
+        .orderBy("created_at", "asc");
 
-        try {
-            
-            const pendingOrders = await db('orders')
-            .where({ draft: false, status: false })
-            .orderBy("created_at", "asc")
+      return res.status(200).json(pendingOrders);
+    } catch (error) {
+      console.error("Erro ao listar pedidos pendentes:", error);
+      return res
+        .status(500)
+        .json({ error: "Erro ao listar pedidos pendentes", details: error.message });
+    }
+  },
 
-            return res.status(200).json(pendingOrders)
-
-        } catch (error) {
-            return res.status(500).json({error: "Erro ao listar pedidos pendentes", details: error.message})
-        }
-    },
 
     finishOrder: async (req, res, db) => {
     const { order_id } = req.body;
