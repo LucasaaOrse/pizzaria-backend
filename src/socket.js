@@ -15,15 +15,11 @@ function initSocket(server) {
 
     // Quando um cliente envia uma mensagem
     socket.on("sendMessage", ({ room, author, message }) => {
-      const payload = {
-        author,
-        message,
-        timestamp: Date.now()
-      };
+      const payload = { author, message, timestamp: Date.now() };
 
-      // Emite para todos da sala (ex: mesa-10)
-      io.to(room).emit("newMessage", payload);
-      console.log(`Mensagem enviada para sala ${room}:`, payload);
+      // Emite para todos NA SALA, _menos_ quem enviou
+      socket.to(room).emit("newMessage", payload);
+      console.log(`Mensagem enviada para sala ${room} (exceto o remetente):`, payload);
     });
 
     socket.on('disconnect', () => {
