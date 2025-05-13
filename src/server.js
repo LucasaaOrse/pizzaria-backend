@@ -1,4 +1,5 @@
-// server.js
+// server.js (início do arquivo)
+
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
@@ -9,11 +10,15 @@ const knex = require('./database');
 const app = express();
 const server = http.createServer(app);
 
-// Configura CORS para permitir seu frontend
-app.use(cors({ origin: ['*'], credentials: true }));
+// 1️⃣ Aplique CORS **antes** de tudo  
+app.use(cors({
+  origin: ['*'], // seu Expo/React Native
+  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+  credentials: true
+}));
 app.options('*', cors());
 
-// Body parsing
+// 2️⃣ Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
