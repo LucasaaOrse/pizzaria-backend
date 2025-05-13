@@ -95,28 +95,30 @@ module.exports = {
         }
     },
 
-    finishOrder: async (req, res, db) =>{
-        const { order_id } = req.body
+    finishOrder: async (req, res, db) => {
+    const { order_id } = req.body;
+    if (!order_id) return res.status(400).json({ error: "Order invalida" });
 
-        if(!order_id){
-            return res.status(400).json({error: "Order invalida"})
-        }
+    try {
+      const order = await db('orders').where({ id: order_id }).first();
+      if (!order) return res.status(404).json({ error: "Order não encontrada" });
 
-        try {
-            
-            const order = await db('orders').where({ id: order_id }).first()
+      await db('orders').where({ id: order_id }).update({ status: true });
+      const orderUpdate = await db('orders').where({ id: order_id }).first();
 
-            if(!order){
-                return res.status(404).json({ error: "Order não encontrada"})
-            }
+      // Emite um evento para todos os clientes
+      getIO().emit('orderFinished', { id: order_id });
 
-            await db('orders').where({id: order_id}).update({status: true})
-            
-            const orderUpdate = await db('orders').where({id: order_id}).first()
-
-            return res.status(200).json({message: "Pedido finalizado com sucesso", orderUpdate})
-        } catch (error) {
-            return res.status(500).json({ error: "Erro ao finalizar pedido", details: error.message });
-        }
+      return res.status(200).json({
+        message: "Pedido finalizado com sucesso",
+        orderUpdate
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: "Erro ao finalizar pedido",
+        details: error.message
+      });
     }
+  },
+
 }
