@@ -12,13 +12,26 @@ const server = http.createServer(app);
 
 const PORT = process.env.PORT || 3000;
 
-// 1️⃣ Aplique CORS **antes** de tudo  
+const allowedOrigins = [
+  'http://localhost:8081',  // seu Expo/React Native local
+  'https://pizzaria-frontend-j4ynd0rb9-lucasaaorses-projects.vercel.app'
+];
+
 app.use(cors({
-  origin: ['*'], // seu Expo/React Native
+  origin: (origin, callback) => {
+    // permitir requests sem origin (ex: mobile apps nativos) ou do allowedOrigins
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    callback(new Error('Não permitido pelo CORS'));
+  },
   methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
   credentials: true
 }));
-app.options('*', cors());
+app.options('*', cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 
 // 2️⃣ Body parser
 app.use(express.json());
