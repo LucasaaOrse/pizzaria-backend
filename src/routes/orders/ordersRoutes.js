@@ -28,8 +28,11 @@ module.exports = (db) =>{
 
     router.put('/', async (req, res) =>{
         await OrderController.finishOrder(req, res, db)
-    })
+    }),
 
+    router.get('/finished', async (req, res) =>{
+        await OrderController.getFinishedOrders(req, res, db);
+    })
 
     return router
 }

@@ -159,4 +159,19 @@ module.exports = {
     }
   },
 
+  getFinishedOrders: async (req, res, db) => {
+  try {
+    const finished = await db('orders')
+      .where({ status: true })
+      .orderBy('created_at', 'asc');
+    return res.status(200).json(finished);
+  } catch (error) {
+    console.error("Erro ao listar pedidos prontos:", error);
+    return res.status(500).json({
+      error: "Erro ao listar pedidos prontos",
+      details: error.message
+    });
+  }
+}
+
 }

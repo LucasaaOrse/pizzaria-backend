@@ -186,7 +186,7 @@ Content-Type: application/json
 }
 
 ###
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdGUiLCJlbWFpbCI6InRlc3RlQGVtYWlsLmNvbSIsInN1YmplY3QiOjIsImlhdCI6MTc0NzE2OTQ2NCwiZXhwIjoxNzQ3MTczMDY0fQ.UAzNCUGxhU2Owpyk9lwvg2tqW0ABjhACJHOwKPTyyPg
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdGUiLCJlbWFpbCI6InRlc3RlQGVtYWlsLmNvbSIsInN1YmplY3QiOjIsImlhdCI6MTc0NzIzNTc2OSwiZXhwIjoxNzQ3MjM5MzY5fQ.rOKW9-iqmsprfKzCPwhe5LVRVgMTyzOeYCKskCtT-VM
 ###
 POST https://pizzaria-backend-production-bccd.up.railway.app/users
 Content-Type: application/json
@@ -251,7 +251,7 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "ids": [54,55,56,57,58]
+  "ids": [59,60,61,62,63,64,65,66,67,68,69]
 }
 
 
