@@ -1,4 +1,5 @@
 const { Server } = require('socket.io');
+const knex = require('./database'); 
 let io;
 
 function initSocket(server) {
@@ -17,12 +18,18 @@ function initSocket(server) {
 
      
     // Quando um cliente envia uma mensagem
-    socket.on("sendMessage", ({ room, author, message }) => {
+    socket.on("sendMessage", async ({ room, author, message }) => {
       const roomId = String(room);
       const payload = { author, message, timestamp: Date.now() };
 
       console.log("🟢 [server] sendMessage recebido:", { room: roomId, author, message });
 
+      await knex('messages').insert({
+        order_id: roomId,
+        author,
+        message,
+        timestamp: new Date(timestamp)
+      });
 
       // Emite para todos NA SALA, _menos_ quem enviou
       socket.to(roomId).emit("newMessage", payload);
