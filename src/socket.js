@@ -28,7 +28,7 @@ function initSocket(server) {
         order_id: roomId,
         author,
         message,
-        timestamp: new Date(timestamp)
+        timestamp: new Date()
       });
 
       // Emite para todos NA SALA, _menos_ quem enviou
