@@ -5,7 +5,7 @@ const router = express.Router()
 
 module.exports = (db) =>{
 
-    router.post("/:orderId", async (req, res) =>{
+    router.get("/:orderId", async (req, res) =>{
         await MessagensController.getmessages(req, res, db)
     })
 
