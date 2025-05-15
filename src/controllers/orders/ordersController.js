@@ -175,16 +175,21 @@ module.exports = {
 },
 
   deleteOrder: async (req, res, db) => {
-    const { order_id } = req.params
+  const { order_id } = req.params
 
-    try {
-      
-      await db('orders').where({id: order_id}).del()
-      return res.status(200).json({message: "Order deletada"})
+  try {
+    // deleta do banco
+    await db('orders').where({ id: order_id }).del()
 
-    } catch (error) {
-      return res.status(500).json({error: "Erro no servidor", details: error.message})
-    }
+    // emite via socket para todos na cozinha
+    const io = getIO()
+    io.emit("orderDeleted", { id: order_id })
+    console.log("Emitido orderDeleted para sala geral:", order_id)
+
+    return res.status(200).json({ message: "Order deletada" })
+  } catch (error) {
+    return res.status(500).json({ error: "Erro no servidor", details: error.message })
   }
+}
 
 }
