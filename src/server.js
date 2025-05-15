@@ -71,7 +71,7 @@ app.use('/order/add', isAuth, itemsRoutes(knex));
 app.use('/order/get', isAuth, itemsRoutes(knex));
 app.use('/order/remove', isAuth, itemsRoutes(knex));
 app.use('/order/details', isAuth, ordersDetailsRouter(knex));
-app.use('/ingredients', isAuth, stockRoutes(knex));
+app.use('/stock', isAuth, stockRoutes(knex));
 app.use('/recipes', isAuth, recipesRoutes(knex));
 app.use('/messages', isAuth, messagensRoutes(knex) )
 
