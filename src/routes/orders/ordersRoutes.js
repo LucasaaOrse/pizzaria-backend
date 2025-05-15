@@ -32,6 +32,10 @@ module.exports = (db) =>{
 
     router.get('/finished', async (req, res) =>{
         await OrderController.getFinishedOrders(req, res, db);
+    }),
+    
+    router.delete('/:order_id', async (req, res) =>{
+        await OrderController.deleteOrder(req, res, db)
     })
 
     return router

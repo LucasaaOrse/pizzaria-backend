@@ -172,6 +172,19 @@ module.exports = {
       details: error.message
     });
   }
-}
+},
+
+  deleteOrder: async (req, res, db) => {
+    const { order_id } = req.params
+
+    try {
+      
+      await db('orders').where({id: order_id}).del()
+      return res.status(200).json({message: "Order deletada"})
+
+    } catch (error) {
+      return res.status(500).json({error: "Erro no servidor", details: error.message})
+    }
+  }
 
 }
