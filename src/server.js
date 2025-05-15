@@ -57,7 +57,7 @@ const productsRoutes = require('./routes/products/ProductsRoutes');
 const ordersRoutes = require('./routes/orders/ordersRoutes');
 const itemsRoutes = require('./routes/orders/itemsRouter');
 const ordersDetailsRouter = require('./routes/orders/ordersDetailsRouter');
-const ingredientsRoutes = require('./routes/ingredients/IngredientsRoutes');
+const stockRoutes = require('./routes/stock/stockRoutes');
 const recipesRoutes = require('./routes/recipes/RecipesRoutes');
 const messagensRoutes = require('./routes/orders/messagensRoutes')
 
@@ -71,7 +71,7 @@ app.use('/order/add', isAuth, itemsRoutes(knex));
 app.use('/order/get', isAuth, itemsRoutes(knex));
 app.use('/order/remove', isAuth, itemsRoutes(knex));
 app.use('/order/details', isAuth, ordersDetailsRouter(knex));
-app.use('/ingredients', isAuth, ingredientsRoutes(knex));
+app.use('/ingredients', isAuth, stockRoutes(knex));
 app.use('/recipes', isAuth, recipesRoutes(knex));
 app.use('/messages', isAuth, messagensRoutes(knex) )
 
