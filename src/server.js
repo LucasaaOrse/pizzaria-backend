@@ -76,7 +76,7 @@ app.use('/order/details', isAuth, ordersDetailsRouter(knex));
 app.use('/stock', isAuth, stockRoutes(knex));
 app.use('/recipes', isAuth, recipesRoutes(knex));
 app.use('/messages', isAuth, messagensRoutes(knex) )
-app.use('/', isAuth, typesRoutes(knex))
+app.use('/stock/types', isAuth, typesRoutes(knex))
 
 // Inicia o server HTTP (não app.listen)
 knex.migrate.latest()
