@@ -8,9 +8,6 @@ module.exports = (db) => {
   router.get('/', async (req, res) => {
     await StockController.index(req, res, db)
   } );
-  router.get('/types', async (req, res) => {
-    await StockController.types(req, res, db)
-  } );
   router.get('/low', async  (req, res) => {
     await StockController.lowStock(req, res, db)
   } );
