@@ -326,5 +326,5 @@ Authorization: Bearer {{token}}
 
 
 ### Listar estoque
-GET https://pizzaria-backend-production-bccd.up.railway.app/stock
+GET https://pizzaria-backend-production-bccd.up.railway.app/stock/types
 Authorization: Bearer {{token}}

@@ -14,7 +14,7 @@ module.exports = {
   async show(req, res, db) {
     const { id } = req.params;
     try {
-      const item = await db('stock').where({ id }).first();
+      const item = await db('stock_items').where({ id }).first();
       if (!item) return res.status(404).json({ error: 'Item não encontrado' });
       return res.json(item);
     } catch (error) {
@@ -29,9 +29,9 @@ module.exports = {
       return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
     }
     try {
-      const exists = await db('stock').where({ name }).first();
+      const exists = await db('stock_items').where({ name }).first();
       if (exists) return res.status(400).json({ error: 'Item já cadastrado' });
-      const [id] = await db('stock').insert({ name, unit, quantity, type });
+      const [id] = await db('stock_items').insert({ name, unit, quantity, type });
       return res.status(201).json({ id, name, unit, quantity, type });
     } catch (error) {
       return res.status(500).json({ error: 'Erro ao criar item', details: error.message });
@@ -43,10 +43,10 @@ module.exports = {
     const { id } = req.params;
     const { name, unit, type } = req.body;
     try {
-      const item = await db('stock').where({ id }).first();
+      const item = await db('stock_items').where({ id }).first();
       if (!item) return res.status(404).json({ error: 'Item não encontrado' });
-      await db('stock').where({ id }).update({ name, unit, type, updated_at: db.fn.now() });
-      const updated = await db('stock').where({ id }).first();
+      await db('stock_items').where({ id }).update({ name, unit, type, updated_at: db.fn.now() });
+      const updated = await db('stock_items').where({ id }).first();
       return res.json(updated);
     } catch (error) {
       return res.status(500).json({ error: 'Erro ao atualizar item', details: error.message });
@@ -57,9 +57,9 @@ module.exports = {
   async delete(req, res, db) {
     const { id } = req.params;
     try {
-      const item = await db('stock').where({ id }).first();
+      const item = await db('stock_items').where({ id }).first();
       if (!item) return res.status(404).json({ error: 'Item não encontrado' });
-      await db('stock').where({ id }).del();
+      await db('stock_items').where({ id }).del();
       return res.json({ message: 'Item removido do estoque', id });
     } catch (error) {
       return res.status(500).json({ error: 'Erro ao deletar item', details: error.message });
@@ -69,7 +69,7 @@ module.exports = {
   // GET /stock/types
   async types(req, res, db) {
     try {
-      const rows = await db('stock').distinct('type');
+      const rows = await db('stock_items').distinct('type');
       const types = rows.map(r => r.type);
       return res.json(types);
     } catch (error) {
@@ -81,7 +81,7 @@ module.exports = {
   async lowStock(req, res, db) {
     const threshold = Number(req.query.threshold) || 5;
     try {
-      const items = await db('stock')
+      const items = await db('stock_items')
         .where('quantity', '<=', threshold)
         .orderBy('quantity', 'asc');
       return res.json(items);
@@ -100,9 +100,9 @@ module.exports = {
     try {
       for (const { id, quantity } of items) {
         if (quantity <= 0) throw new Error('Quantidade deve ser > 0');
-        const row = await trx('stock').where({ id }).first();
+        const row = await trx('stock_items').where({ id }).first();
         if (!row) throw new Error(`Item ${id} não encontrado`);
-        await trx('stock')
+        await trx('stock_items')
           .where({ id })
           .update({ quantity: Number(row.quantity) + Number(quantity) });
       }
@@ -124,10 +124,10 @@ module.exports = {
     try {
       for (const { id, quantity } of items) {
         if (quantity <= 0) throw new Error('Quantidade deve ser > 0');
-        const row = await trx('stock').where({ id }).first();
+        const row = await trx('stock_items').where({ id }).first();
         if (!row) throw new Error(`Item ${id} não encontrado`);
         if (row.quantity < quantity) throw new Error(`Estoque insuficiente em ${id}`);
-        await trx('stock')
+        await trx('stock_items')
           .where({ id })
           .update({ quantity: Number(row.quantity) - Number(quantity) });
       }
