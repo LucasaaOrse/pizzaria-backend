@@ -20,14 +20,13 @@ exports.up = async function (knex) {
   // 3) adiciona fk em stock_items
   await knex.schema.alterTable("stock_items", table => {
     table
-      .integer("type_id")
-      .unsigned()
-      .notNullable()
-      .defaultTo(1) // assumindo que 'ingrediente' ficou com id=1
-      .references("id")
-      .inTable("stock_item_types")
-      .onDelete("RESTRICT")
-      .alter();    // altera coluna existente
+    .integer("type_id")
+    .unsigned()
+    .notNullable()
+    .defaultTo(1)
+    .references("id")
+    .inTable("stock_item_types")
+    .onDelete("RESTRICT");
   });
 
   // 4) opcional: remover coluna enum 'type' depois de migrar dados
