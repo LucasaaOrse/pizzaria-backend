@@ -76,7 +76,7 @@ module.exports = {
 
       // 3) Busca estoque atual dos ingredientes usados
       const ingredientIds = [...new Set(recipes.map(r => r.ingredient_id))];
-      const stockRows = await db("ingredients")
+      const stockRows = await db("stock")
         .whereIn("id", ingredientIds)
         .select("id", "quantity");
 
