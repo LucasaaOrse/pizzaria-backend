@@ -62,7 +62,7 @@ const recipesRoutes = require('./routes/recipes/RecipesRoutes');
 const messagensRoutes = require('./routes/orders/messagensRoutes')
 const typesRoutes = require('./routes/types/typesRoutes')
 
-
+app.use('/stock/types', isAuth, typesRoutes(knex))
 app.use('/users', userRoutes(knex));
 app.use('/login', authRoutes(knex));
 app.use('/userinfo', isAuth, detailsRoutes(knex));
@@ -76,7 +76,7 @@ app.use('/order/details', isAuth, ordersDetailsRouter(knex));
 app.use('/stock', isAuth, stockRoutes(knex));
 app.use('/recipes', isAuth, recipesRoutes(knex));
 app.use('/messages', isAuth, messagensRoutes(knex) )
-app.use('/stock/types', isAuth, typesRoutes(knex))
+
 
 // Inicia o server HTTP (não app.listen)
 knex.migrate.latest()
