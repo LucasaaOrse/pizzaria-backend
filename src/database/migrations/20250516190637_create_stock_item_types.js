@@ -1,28 +1,46 @@
-// controllers/stock/TypeController.js
-module.exports = {
-  // GET /stock/types
-  async index(req, res, db) {
-    const types = await db("stock_item_types").select("id", "name");
-    return res.json(types);
-  },
+// migrations/20250516_create_stock_item_types.js
+/**
+ * @param { import("knex").Knex } knex
+ */
+exports.up = async function (knex) {
+  // 1) cria tabela de tipos
+  await knex.schema.createTable("stock_item_types", table => {
+    table.increments("id").primary();
+    table.string("name").notNullable().unique();
+  });
 
-  // POST /stock/types
-  async create(req, res, db) {
-    const { name } = req.body;
-    if (!name) return res.status(400).json({ error: "Nome é obrigatório" });
-    try {
-      const [id] = await db("stock_item_types").insert({ name });
-      return res.status(201).json({ id, name });
-    } catch (err) {
-      return res.status(400).json({ error: "Tipo já existe" });
-    }
-  },
+  // 2) popula com os tipos atuais do enum
+  await knex("stock_item_types").insert([
+    { name: "ingrediente" },
+    { name: "bebida" },
+    { name: "refrigerante" },
+    { name: "outro" },
+  ]);
 
-  // DELETE /stock/types/:id
-  async delete(req, res, db) {
-    const { id } = req.params;
-    // opcional: verificar se há items usando esse tipo
-    await db("stock_item_types").where({ id }).del();
-    return res.json({ message: "Tipo removido" });
-  }
+  // 3) adiciona fk em stock_items
+  await knex.schema.alterTable("stock_items", table => {
+    table
+      .integer("type_id")
+      .unsigned()
+      .notNullable()
+      .defaultTo(1) // assumindo que 'ingrediente' ficou com id=1
+      .references("id")
+      .inTable("stock_item_types")
+      .onDelete("RESTRICT")
+      .alter();    // altera coluna existente
+  });
+
+  // 4) opcional: remover coluna enum 'type' depois de migrar dados
+  await knex.schema.alterTable("stock_items", table => {
+    table.dropColumn("type");
+  });
+};
+
+exports.down = async function (knex) {
+  await knex.schema.alterTable("stock_items", table => {
+    table.string("type"); // recria como string simples
+    table.dropForeign("type_id");
+    table.dropColumn("type_id");
+  });
+  await knex.schema.dropTable("stock_item_types");
 };
