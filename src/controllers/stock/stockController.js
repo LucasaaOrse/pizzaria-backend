@@ -3,7 +3,7 @@ module.exports = {
   // já existente: listar tudo
   async index(req, res, db) {
     try {
-      const items = await db('stock').select('*').orderBy('name');
+      const items = await db('stock_items').select('*').orderBy('name');
       return res.json(items);
     } catch (error) {
       return res.status(500).json({ error: 'Erro ao listar estoque', details: error.message });
