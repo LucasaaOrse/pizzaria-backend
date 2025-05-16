@@ -4,6 +4,7 @@ const router = express.Router();
 const TypeController = require("../../controllers/types/TypesController");
 
 module.exports = (db) => {
+
   router.get("/types", async (req, res) => {
   await TypeController.index(req, res, db)
   });
@@ -14,5 +15,6 @@ module.exports = (db) => {
     await TypeController.delete(req, res, db)
   });
 
+  return router
 }
 
