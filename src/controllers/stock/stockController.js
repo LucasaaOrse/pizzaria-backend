@@ -3,7 +3,10 @@ module.exports = {
   // já existente: listar tudo
   async index(req, res, db) {
     try {
-      const items = await db('stock_items').select('*').orderBy('name');
+      const items = await db('stock_items as s')
+        .leftJoin('stock_item_types as t', 's.type_id', 't.id')
+        .select('s.*', 't.name as type_name')
+        .orderBy('s.name');
       return res.json(items);
     } catch (error) {
       return res.status(500).json({ error: 'Erro ao listar estoque', details: error.message });
@@ -24,14 +27,14 @@ module.exports = {
 
   // POST /stock
   async create(req, res, db) {
-    const { name, unit, quantity, type } = req.body;
-    if (!name || !unit || quantity == null || !type) {
+    const { name, unit, quantity, type_id } = req.body;
+    if (!name || !unit || quantity == null || !type_id) {
       return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
     }
     try {
       const exists = await db('stock_items').where({ name }).first();
       if (exists) return res.status(400).json({ error: 'Item já cadastrado' });
-      const [id] = await db('stock_items').insert({ name, unit, quantity, type });
+      const [id] = await db('stock_items').insert({ name, unit, quantity, type_id });
       return res.status(201).json({ id, name, unit, quantity, type });
     } catch (error) {
       return res.status(500).json({ error: 'Erro ao criar item', details: error.message });
@@ -41,11 +44,11 @@ module.exports = {
   // PUT /stock/:id
   async update(req, res, db) {
     const { id } = req.params;
-    const { name, unit, type } = req.body;
+    const { name, unit, type_id } = req.body;
     try {
       const item = await db('stock_items').where({ id }).first();
       if (!item) return res.status(404).json({ error: 'Item não encontrado' });
-      await db('stock_items').where({ id }).update({ name, unit, type, updated_at: db.fn.now() });
+      await db('stock_items').where({ id }).update({ name, unit, type_id, updated_at: db.fn.now() });
       const updated = await db('stock_items').where({ id }).first();
       return res.json(updated);
     } catch (error) {

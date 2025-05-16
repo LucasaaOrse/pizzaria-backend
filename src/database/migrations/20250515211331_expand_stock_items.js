@@ -6,13 +6,7 @@ exports.up = async function(knex) {
 
   // 2) adiciona coluna type, price, torna unit nullable
   await knex.schema.alterTable('stock_items', table => {
-    table
-      .enu('type',
-        ['ingrediente','bebida','refrigerante','outro'],
-        { useNative: true, enumName: 'stock_item_type' }
-      )
-      .notNullable()
-      .defaultTo('ingrediente');       // preenche linhas antigas
+    table.integer('type_id').unsigned().references('id').inTable('stock_item_types').onDelete('SET NULL');      // preenche linhas antigas
 
     table.decimal('price', 10, 2).nullable();
     table.string('unit').nullable().alter();
