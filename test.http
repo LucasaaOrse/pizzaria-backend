@@ -344,9 +344,9 @@ Content-Type: application/json
 {
   "name": "Tempe",
   "unit": "kg",
-  "quantity": "10",
-  "type_id": 1,
-  "minimum": 30
+  "quantity": 50,
+  "type_id": 5,
+  "minimum_quantity": 30
 
 }
 

@@ -47,7 +47,7 @@ module.exports = {
       ? (typeof result[0] === 'object' ? result[0].id : result[0])
       : result;
 
-    return res.status(201).json({ id, name, unit, quantity, type_id, minimum });
+    return res.status(201).json({ id, name, unit, quantity, type_id, minimum_quantity });
   } catch (error) {
     console.error("Erro ao criar item:", error);
     return res.status(500).json({
