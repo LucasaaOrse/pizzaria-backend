@@ -27,19 +27,36 @@ module.exports = {
 
   // POST /stock
   async create(req, res, db) {
-    const { name, unit, quantity, type_id } = req.body;
-    if (!name || !unit || quantity == null || !type_id) {
-      return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
+  const { name, unit, quantity, type_id } = req.body;
+  if (!name || !unit || quantity == null || !type_id) {
+    return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
+  }
+  try {
+    const exists = await db('stock_items').where({ name }).first();
+    if (exists) {
+      return res.status(400).json({ error: 'Item já cadastrado' });
     }
-    try {
-      const exists = await db('stock_items').where({ name }).first();
-      if (exists) return res.status(400).json({ error: 'Item já cadastrado' });
-      const [id] = await db('stock_items').insert({ name, unit, quantity, type_id });
-      return res.status(201).json({ id, name, unit, quantity, type });
-    } catch (error) {
-      return res.status(500).json({ error: 'Erro ao criar item', details: error.message });
-    }
-  },
+
+    // Para Postgres: retorne explicitamente o id
+    const result = await db('stock_items')
+      .insert({ name, unit, quantity, type_id })
+      .returning('id');
+    
+    // result pode ser [ { id: 7 } ] ou [7], dependendo da versão
+    const id = Array.isArray(result)
+      ? (typeof result[0] === 'object' ? result[0].id : result[0])
+      : result;
+
+    // Retorne o novo item com as propriedades corretas
+    return res.status(201).json({ id, name, unit, quantity, type_id });
+  } catch (error) {
+    console.error("Erro ao criar item:", error);
+    return res.status(500).json({
+      error: 'Erro ao criar item',
+      details: error.message
+    });
+  }
+},
 
   // PUT /stock/:id
   async update(req, res, db) {
