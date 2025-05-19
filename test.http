@@ -342,7 +342,7 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "name": "Tempe",
+  "name": "Tempero",
   "unit": "kg",
   "quantity": 50,
   "type_id": 5,

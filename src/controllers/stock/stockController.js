@@ -59,7 +59,7 @@ module.exports = {
 
   async update(req, res, db) {
   const { id } = req.params;
-  const { name, unit, type_id, minimum_quantity } = req.body;
+  const { name, unit, type_id, minimum_quantity, quantity } = req.body;
 
   try {
     const item = await db('stock_items').where({ id }).first();
@@ -67,7 +67,7 @@ module.exports = {
 
     await db('stock_items')
       .where({ id })
-      .update({ name, unit, type_id, minimum_quantity, updated_at: db.fn.now() });
+      .update({ name, unit, type_id, minimum_quantity, quantity, updated_at: db.fn.now() });
 
     const updated = await db('stock_items').where({ id }).first();
     return res.json(updated);
