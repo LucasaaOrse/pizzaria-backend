@@ -27,28 +27,27 @@ module.exports = {
 
   // POST /stock
   async create(req, res, db) {
-  const { name, unit, quantity, type_id } = req.body;
-  if (!name || !unit || quantity == null || !type_id) {
+  const { name, unit, quantity, type_id, minimum } = req.body;
+
+  if (!name || !unit || quantity == null || !type_id || minimum == null) {
     return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
   }
+
   try {
     const exists = await db('stock_items').where({ name }).first();
     if (exists) {
       return res.status(400).json({ error: 'Item já cadastrado' });
     }
 
-    // Para Postgres: retorne explicitamente o id
     const result = await db('stock_items')
-      .insert({ name, unit, quantity, type_id })
+      .insert({ name, unit, quantity, type_id, minimum })
       .returning('id');
-    
-    // result pode ser [ { id: 7 } ] ou [7], dependendo da versão
+
     const id = Array.isArray(result)
       ? (typeof result[0] === 'object' ? result[0].id : result[0])
       : result;
 
-    // Retorne o novo item com as propriedades corretas
-    return res.status(201).json({ id, name, unit, quantity, type_id });
+    return res.status(201).json({ id, name, unit, quantity, type_id, minimum });
   } catch (error) {
     console.error("Erro ao criar item:", error);
     return res.status(500).json({
@@ -58,20 +57,24 @@ module.exports = {
   }
 },
 
-  // PUT /stock/:id
   async update(req, res, db) {
-    const { id } = req.params;
-    const { name, unit, type_id } = req.body;
-    try {
-      const item = await db('stock_items').where({ id }).first();
-      if (!item) return res.status(404).json({ error: 'Item não encontrado' });
-      await db('stock_items').where({ id }).update({ name, unit, type_id, updated_at: db.fn.now() });
-      const updated = await db('stock_items').where({ id }).first();
-      return res.json(updated);
-    } catch (error) {
-      return res.status(500).json({ error: 'Erro ao atualizar item', details: error.message });
-    }
-  },
+  const { id } = req.params;
+  const { name, unit, type_id, minimum } = req.body;
+
+  try {
+    const item = await db('stock_items').where({ id }).first();
+    if (!item) return res.status(404).json({ error: 'Item não encontrado' });
+
+    await db('stock_items')
+      .where({ id })
+      .update({ name, unit, type_id, minimum, updated_at: db.fn.now() });
+
+    const updated = await db('stock_items').where({ id }).first();
+    return res.json(updated);
+  } catch (error) {
+    return res.status(500).json({ error: 'Erro ao atualizar item', details: error.message });
+  }
+},
 
   // DELETE /stock/:id
   async delete(req, res, db) {
