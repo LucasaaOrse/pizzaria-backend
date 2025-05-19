@@ -78,7 +78,10 @@ app.use('/recipes', isAuth, recipesRoutes(knex));
 app.use('/messages', isAuth, messagensRoutes(knex) )
 
 
-await knex.raw(`
+(async () => {
+  try {
+    console.log('🚨 APAGANDO TODAS AS TABELAS...');
+    await knex.raw(`
       DO $$ DECLARE
           r RECORD;
       BEGIN
@@ -87,15 +90,15 @@ await knex.raw(`
           END LOOP;
       END $$;
     `);
-
-console.log('✅ Tabelas removidas com sucesso!');
-
-// Inicia o server HTTP (não app.listen)
-knex.migrate.latest()
-  .then(() => {
+    console.log('✅ Tabelas apagadas com sucesso!');
+    
+    await knex.migrate.latest();
     console.log('✅ Migrations executadas com sucesso!');
+
     server.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
     });
-  })
-  .catch(err => console.error('❌ Erro ao rodar migrations:', err));
+  } catch (err) {
+    console.error('❌ Erro ao apagar tabelas ou rodar migrations:', err);
+  }
+})();
