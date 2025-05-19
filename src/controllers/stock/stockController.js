@@ -27,9 +27,9 @@ module.exports = {
 
   // POST /stock
   async create(req, res, db) {
-  const { name, unit, quantity, type_id, minimum } = req.body;
+  const { name, unit, quantity, type_id, minimum_quantity } = req.body;
 
-  if (!name || !unit || quantity == null || !type_id || minimum == null) {
+  if (!name || !unit || quantity == null || !type_id || minimum_quantity == null) {
     return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
   }
 
@@ -40,7 +40,7 @@ module.exports = {
     }
 
     const result = await db('stock_items')
-      .insert({ name, unit, quantity, type_id, minimum })
+      .insert({ name, unit, quantity, type_id, minimum_quantity })
       .returning('id');
 
     const id = Array.isArray(result)
@@ -59,7 +59,7 @@ module.exports = {
 
   async update(req, res, db) {
   const { id } = req.params;
-  const { name, unit, type_id, minimum } = req.body;
+  const { name, unit, type_id, minimum_quantity } = req.body;
 
   try {
     const item = await db('stock_items').where({ id }).first();
@@ -67,7 +67,7 @@ module.exports = {
 
     await db('stock_items')
       .where({ id })
-      .update({ name, unit, type_id, minimum, updated_at: db.fn.now() });
+      .update({ name, unit, type_id, minimum_quantity, updated_at: db.fn.now() });
 
     const updated = await db('stock_items').where({ id }).first();
     return res.json(updated);

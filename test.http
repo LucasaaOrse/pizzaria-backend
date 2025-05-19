@@ -186,7 +186,7 @@ Content-Type: application/json
 }
 
 ###
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdGUiLCJlbWFpbCI6InRlc3RlQGVtYWlsLmNvbSIsInN1YmplY3QiOjIsImlhdCI6MTc0NzY2ODk2OSwiZXhwIjoxNzQ3NjcyNTY5fQ.ZtHPrhONrb-jOotEbkwjZfb6lNB2prO2vA2rp8Vo_Gs
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdGUiLCJlbWFpbCI6InRlc3RlQGVtYWlsLmNvbSIsInN1YmplY3QiOjIsImlhdCI6MTc0NzY4OTM5MywiZXhwIjoxNzQ3NjkyOTkzfQ.4hvU7ZTf7G_WeJwqVuSCmEwVxdt0mMVSXRR0LUesz_8
 POST https://pizzaria-backend-production-bccd.up.railway.app/users
 Content-Type: application/json
 
@@ -345,7 +345,8 @@ Content-Type: application/json
   "name": "Tempe",
   "unit": "kg",
   "quantity": "10",
-  "type_id": 1
+  "type_id": 1,
+  "minimum": 30
 
 }
 
