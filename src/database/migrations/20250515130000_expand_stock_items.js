@@ -12,6 +12,7 @@ exports.up = async function(knex) {
 
     table.decimal('price', 10, 2).nullable();
     table.string('unit').nullable().alter();
+    table.integer('minimum_quantity').notNullable().defaultTo(1);
   });
 
   // Atualiza a FK na tabela recipes
@@ -37,6 +38,7 @@ exports.down = async function(knex) {
     table.dropColumn('type_id');
     table.dropColumn('price');
     table.string('unit').notNullable().alter();
+    table.dropColumn('minimum_quantity');
   });
 
   await knex.schema.renameTable('stock_items', 'ingredients');

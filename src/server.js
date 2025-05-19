@@ -77,6 +77,23 @@ app.use('/stock', isAuth, stockRoutes(knex));
 app.use('/recipes', isAuth, recipesRoutes(knex));
 app.use('/messages', isAuth, messagensRoutes(knex) )
 
+
+async function resetDatabase() {
+  console.log('🚨 Apagando todas as tabelas...');
+  await knex.raw(`
+    DO $$ DECLARE
+        r RECORD;
+    BEGIN
+        FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = current_schema()) LOOP
+            EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE';
+        END LOOP;
+    END $$;
+  `);
+  console.log('✅ Tabelas apagadas com sucesso!');
+}
+
+resetDatabase()
+
 // Inicia o server HTTP (não app.listen)
 knex.migrate.latest()
   .then(() => {
