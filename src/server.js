@@ -78,6 +78,18 @@ app.use('/recipes', isAuth, recipesRoutes(knex));
 app.use('/messages', isAuth, messagensRoutes(knex) )
 
 
+await knex.raw(`
+      DO $$ DECLARE
+          r RECORD;
+      BEGIN
+          FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = current_schema()) LOOP
+              EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE';
+          END LOOP;
+      END $$;
+    `);
+
+console.log('✅ Tabelas removidas com sucesso!');
+
 // Inicia o server HTTP (não app.listen)
 knex.migrate.latest()
   .then(() => {
