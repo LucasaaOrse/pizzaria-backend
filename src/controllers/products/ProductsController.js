@@ -1,5 +1,3 @@
-
-
 const cloudinary = require('cloudinary').v2;
 
 cloudinary.config({
@@ -9,49 +7,98 @@ cloudinary.config({
 });
 
 module.exports = {
-    createProduct: async (req, res, db) => {
-        const { name, description, price, category_id } = req.body;
-  const file = req.files?.file;
+  createProduct: async (req, res, db) => {
+    const { name, description, price, category_id } = req.body;
+    const file = req.files?.file;
 
-  if (!name || !description || !price || !category_id || !file) {
-    return res.status(400).json({ error: "Todos os campos são obrigatórios" });
-  }
+    if (!name || !description || !price || !category_id || !file) {
+      return res.status(400).json({ error: "Todos os campos são obrigatórios" });
+    }
 
-  try {
-    // Upload da imagem
-    const uploadResult = await new Promise((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream(
-        { folder: 'produtos' }, // opcional: pasta no Cloudinary
-        (error, result) => {
-          if (error) return reject(error);
-          resolve(result);
-        }
-      );
-      stream.end(file.data); // envia os bytes da imagem
-    });
+    try {
+      const uploadResult = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: 'produtos' },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+          }
+        );
+        stream.end(file.data);
+      });
 
-    const parsedPrice = parseFloat(price.toString().replace(",", "."));
+      const parsedPrice = parseFloat(price.toString().replace(",", "."));
 
-    const [newProduct] = await db('products')
-  .insert({
-    name,
-    description,
-    price: parsedPrice,
-    banner: uploadResult.secure_url,
-    category_id
-  })
-  .returning('*'); // retorna todas as colunas
+      const [newProduct] = await db('products')
+        .insert({
+          name,
+          description,
+          price: parsedPrice,
+          banner: uploadResult.secure_url,
+          category_id
+        })
+        .returning('*');
 
+      return res.status(201).json({ message: "Produto cadastrado", newProduct });
+    } catch (err) {
+      console.error("Erro ao cadastrar produto:", err);
+      return res.status(500).json({ error: "Erro interno", details: err.message });
+    }
+  },
 
-    return res.status(201).json({ message: "Produto cadastrado", newProduct });
-  } catch (err) {
-    console.error("Erro ao cadastrar produto:", err);
-    return res.status(500).json({ error: "Erro interno", details: err.message });
-  }
-      },
-           
+  updateProduct: async (req, res, db) => {
+    const { id } = req.params;
+    const { name, description, price, category_id } = req.body;
+    // Pode incluir upload da imagem aqui se quiser
+    if (!id) {
+      return res.status(400).json({ error: "ID do produto é obrigatório" });
+    }
+    try {
+      const product = await db('products').where({ id }).first();
+      if (!product) {
+        return res.status(404).json({ error: "Produto não encontrado" });
+      }
 
-    async listByCategoryWithAvailability(req, res, db) {
+      const updateData = {};
+      if (name) updateData.name = name;
+      if (description) updateData.description = description;
+      if (price) updateData.price = parseFloat(price.toString().replace(",", "."));
+      if (category_id) updateData.category_id = category_id;
+
+      await db('products').where({ id }).update(updateData);
+
+      const updatedProduct = await db('products').where({ id }).first();
+
+      return res.json({ message: "Produto atualizado", updatedProduct });
+    } catch (error) {
+      return res.status(500).json({ error: "Erro ao atualizar produto", details: error.message });
+    }
+  },
+
+  listAllWithRecipes: async (req, res, db) => {
+    try {
+      const products = await db('products').select('*');
+
+      // para cada produto, busca a receita
+      const results = await Promise.all(products.map(async (prod) => {
+        const recipe = await db('recipes')
+          .where({ product_id: prod.id })
+          .join('ingredients', 'recipes.ingredient_id', 'ingredients.id')
+          .select('ingredients.id', 'ingredients.name', 'recipes.quantity', 'ingredients.unit');
+
+        return {
+          ...prod,
+          recipe
+        };
+      }));
+
+      return res.json(results);
+    } catch (error) {
+      return res.status(500).json({ error: "Erro ao listar produtos com receitas", details: error.message });
+    }
+  },
+
+  listByCategoryWithAvailability: async (req, res, db) => {
     const category_id = req.query.category;
     if (!category_id) {
       return res.status(400).json({ error: "Categoria inválida" });
@@ -86,7 +133,6 @@ module.exports = {
 
       // 4) Calcula disponibilidade por produto
       const result = products.map(prod => {
-        // total necessário de cada ingrediente
         const needed = recipes
           .filter(r => r.product_id === prod.id)
           .reduce((acc, { ingredient_id, quantity }) => {
@@ -94,7 +140,6 @@ module.exports = {
             return acc;
           }, {});
 
-        // identifica faltas
         const missing = Object.entries(needed)
           .filter(([ingId, reqQty]) => (stockMap[ingId] || 0) < reqQty)
           .map(([ingId, reqQty]) => ({
@@ -122,29 +167,56 @@ module.exports = {
     }
   },
 
-    deleteProduct: async (req, res, db) =>{
-        const { id } = req.body
+  deleteProduct: async (req, res, db) => {
+    const { id } = req.params;
 
-        if(!id){
-            return res.status(404).json({error: "Id do produto invalido"})
-        }
-
-        try {
-            const delelteProduct = await db("products").where({id}).first()
-
-            if(!delelteProduct){
-                return res.status(404).json({error: "Produto não encontrado"})
-            }
-
-            await db("products").where({id}).del()
-
-            return res.status(200).json({
-                message: "Produto deletado com sucesso",
-                product: delelteProduct
-            })
-        } catch (error) {
-            return res.status(500).json({error: "Erro ao deletar produto"})
-        }
-        
+    if (!id) {
+      return res.status(404).json({ error: "Id do produto inválido" });
     }
+
+    try {
+      const product = await db("products").where({ id }).first();
+
+      if (!product) {
+        return res.status(404).json({ error: "Produto não encontrado" });
+      }
+
+      await db("products").where({ id }).del();
+
+      return res.status(200).json({
+        message: "Produto deletado com sucesso",
+        product
+      });
+    } catch (error) {
+      return res.status(500).json({ error: "Erro ao deletar produto" });
+    }
+  },
+
+  // Nova rota para listar todos produtos (simplificado)
+  listAllProducts: async (req, res, db) => {
+    try {
+      const products = await db("products").select("id", "name", "price", "banner", "category_id");
+      return res.json(products);
+    } catch (err) {
+      return res.status(500).json({ error: "Erro ao listar produtos", details: err.message });
+    }
+  },
+
+  // Nova rota para obter detalhes de um produto pelo ID (útil para edição)
+  getProductById: async (req, res, db) => {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: "Id do produto inválido" });
+    }
+
+    try {
+      const product = await db("products").where({ id }).first();
+      if (!product) {
+        return res.status(404).json({ error: "Produto não encontrado" });
+      }
+      return res.json(product);
+    } catch (err) {
+      return res.status(500).json({ error: "Erro ao buscar produto", details: err.message });
+    }
+  },
 };
