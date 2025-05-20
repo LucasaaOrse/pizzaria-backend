@@ -6,9 +6,9 @@ const router = express.Router();
 
 module.exports = (db) => {
   // Criar produto com upload da imagem
-  router.post("/", upload.single("file"), (req, res) => {
+  router.post("/", (req, res) => {
     ProductsController.createProduct(req, res, db);
-  });
+    });
 
   // Atualizar produto
   router.put("/:id", (req, res) => {

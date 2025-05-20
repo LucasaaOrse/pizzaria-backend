@@ -94,6 +94,7 @@ module.exports = {
     }
   },
 
+
   listAllWithRecipes: async (req, res, db) => {
   try {
     const products = await db('products').select('*');
