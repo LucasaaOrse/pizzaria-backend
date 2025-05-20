@@ -26,24 +26,24 @@ module.exports = {
 
   // Mostra todos os ingredientes da receita de um produto
   show: async (req, res, db) => {
-    const { product_id } = req.params;
-    try {
-      const recipe = await db('recipes')
-        .where({ product_id })
-        .join('ingredients', 'recipes.ingredient_id', 'ingredients.id')
-        .select(
-          'recipes.id',
-          'recipes.product_id',
-          'ingredients.id as ingredient_id',
-          'ingredients.name',
-          'recipes.quantity',
-          'ingredients.unit'
-        );
-      return res.json(recipe);
-    } catch (error) {
-      return res.status(500).json({ error: "Erro do servidor", details: error.message });
-    }
-  },
+  const { product_id } = req.params;
+  try {
+    const recipe = await db('recipes')
+      .where({ product_id })
+      .join('stock_items', 'recipes.ingredient_id', 'stock_items.id')
+      .select(
+        'recipes.id',
+        'recipes.product_id',
+        'recipes.ingredient_id', // mantém esse nome pois ainda é o campo na tabela
+        'recipes.quantity',
+        'stock_items.name',
+        'stock_items.unit'
+      );
+    return res.json(recipe);
+  } catch (error) {
+    return res.status(500).json({ error: "Erro do servidor", details: error.message });
+  }
+},
 
   // Adiciona um ingrediente na receita (sem apagar os anteriores)
   addIngredient: async (req, res, db) => {
