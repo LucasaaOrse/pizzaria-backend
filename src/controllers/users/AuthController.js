@@ -20,7 +20,7 @@ module.exports = {
                 return res.status(400).json({error: "Email/Senha incorreta"})
             }
 
-            const token = jwt.sign({name: user.name, email: user.email, subject: user.id, }, process.env.SECRET_KEY,  { expiresIn: "1h"})
+            const token = jwt.sign({name: user.name, email: user.email, subject: user.id, }, process.env.SECRET_KEY,  { expiresIn: "24h"})
             return res.status(200).json({menssagem: "Login bem-sucedido", id: user.id, name: user.name, email: user.email, token})
         } catch (error) {
             console.error("Erro no login:", error);
