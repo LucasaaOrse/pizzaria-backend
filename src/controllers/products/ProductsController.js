@@ -76,27 +76,26 @@ module.exports = {
   },
 
   listAllWithRecipes: async (req, res, db) => {
-    try {
-      const products = await db('products').select('*');
+  try {
+    const products = await db('products').select('*');
 
-      // para cada produto, busca a receita
-      const results = await Promise.all(products.map(async (prod) => {
-        const recipe = await db('recipes')
-          .where({ product_id: prod.id })
-          .join('ingredients', 'recipes.ingredient_id', 'ingredients.id')
-          .select('ingredients.id', 'ingredients.name', 'recipes.quantity', 'ingredients.unit');
+    const results = await Promise.all(products.map(async (prod) => {
+      const recipe = await db('recipes')
+        .where({ product_id: prod.id })
+        .join('stock_items', 'recipes.ingredient_id', 'stock_items.id')
+        .select('stock_items.id', 'stock_items.name', 'recipes.quantity', 'stock_items.unit');
 
-        return {
-          ...prod,
-          recipe
-        };
-      }));
+      return {
+        ...prod,
+        recipe
+      };
+    }));
 
-      return res.json(results);
-    } catch (error) {
-      return res.status(500).json({ error: "Erro ao listar produtos com receitas", details: error.message });
-    }
-  },
+    return res.json(results);
+  } catch (error) {
+    return res.status(500).json({ error: "Erro ao listar produtos com receitas", details: error.message });
+  }
+},
 
   listByCategoryWithAvailability: async (req, res, db) => {
     const category_id = req.query.category;
