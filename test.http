@@ -376,3 +376,8 @@ Authorization: Bearer {{token}}
 GET https://pizzaria-backend-production-bccd.up.railway.app/recipes/1
 Content-Type: application/json
 Authorization: Bearer {{token}}
+
+### Listar estoque
+GET https://pizzaria-backend-production-bccd.up.railway.app/product
+Content-Type: application/json
+Authorization: Bearer {{token}}

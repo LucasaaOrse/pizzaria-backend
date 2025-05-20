@@ -10,23 +10,33 @@ module.exports = (db) => {
     ProductsController.createProduct(req, res, db);
   });
 
-  // Atualizar produto (pode ser adaptado para aceitar upload também)
+  // Atualizar produto
   router.put("/:id", (req, res) => {
     ProductsController.updateProduct(req, res, db);
   });
 
-  // Listar todos produtos com receitas embutidas
+  // Listar todos os produtos com receitas embutidas
   router.get("/all-with-recipes", (req, res) => {
     ProductsController.listAllWithRecipes(req, res, db);
   });
 
-  // Listar por categoria com disponibilidade (sua rota atual)
+  // ✅ Listar todos os produtos (simplificado)
+  router.get("/all", (req, res) => {
+    ProductsController.listAllProducts(req, res, db);
+  });
+
+  // ✅ Obter produto por ID
+  router.get("/:id", (req, res) => {
+    ProductsController.getProductById(req, res, db);
+  });
+
+  // Listar por categoria com disponibilidade
   router.get("/", (req, res) => {
     ProductsController.listByCategoryWithAvailability(req, res, db);
   });
 
   // Deletar produto
-  router.delete("/", (req, res) => {
+  router.delete("/:id", (req, res) => {
     ProductsController.deleteProduct(req, res, db);
   });
 
