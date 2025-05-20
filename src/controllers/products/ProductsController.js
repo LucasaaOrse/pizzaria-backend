@@ -49,10 +49,12 @@ module.exports = {
   updateProduct: async (req, res, db) => {
     const { id } = req.params;
     const { name, description, price, category_id } = req.body;
-    // Pode incluir upload da imagem aqui se quiser
+    const file = req.files?.file;
+
     if (!id) {
       return res.status(400).json({ error: "ID do produto é obrigatório" });
     }
+
     try {
       const product = await db('products').where({ id }).first();
       if (!product) {
@@ -65,12 +67,29 @@ module.exports = {
       if (price) updateData.price = parseFloat(price.toString().replace(",", "."));
       if (category_id) updateData.category_id = category_id;
 
+      // Se houver nova imagem, fazer upload e atualizar banner
+      if (file) {
+        const uploadResult = await new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: 'produtos' },
+            (error, result) => {
+              if (error) return reject(error);
+              resolve(result);
+            }
+          );
+          stream.end(file.data);
+        });
+
+        updateData.banner = uploadResult.secure_url;
+      }
+
       await db('products').where({ id }).update(updateData);
 
       const updatedProduct = await db('products').where({ id }).first();
 
-      return res.json({ message: "Produto atualizado", updatedProduct });
+      return res.json({ message: "Produto atualizado com sucesso", updatedProduct });
     } catch (error) {
+      console.error("Erro ao atualizar produto:", error);
       return res.status(500).json({ error: "Erro ao atualizar produto", details: error.message });
     }
   },
