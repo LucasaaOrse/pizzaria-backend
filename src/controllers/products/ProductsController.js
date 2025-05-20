@@ -87,6 +87,7 @@ module.exports = {
 
       return {
         ...prod,
+        price: Number(prod.price),
         recipe
       };
     }));
@@ -150,7 +151,7 @@ module.exports = {
         return {
           id: prod.id,
           name: prod.name,
-          price: prod.price,
+          price: Number(prod.price),
           available: missing.length === 0,
           missing
         };
@@ -195,7 +196,11 @@ module.exports = {
   listAllProducts: async (req, res, db) => {
     try {
       const products = await db("products").select("id", "name", "price", "banner", "category_id");
-      return res.json(products);
+      const result = products.map(p => ({
+        ...p,
+        price: Number(p.price) // <- converte string para número
+      }));
+      return res.json(result);
     } catch (err) {
       return res.status(500).json({ error: "Erro ao listar produtos", details: err.message });
     }
@@ -213,6 +218,7 @@ module.exports = {
       if (!product) {
         return res.status(404).json({ error: "Produto não encontrado" });
       }
+      product.price = Number(product.price);
       return res.json(product);
     } catch (err) {
       return res.status(500).json({ error: "Erro ao buscar produto", details: err.message });

@@ -378,6 +378,6 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 ### Listar estoque
-GET https://pizzaria-backend-production-bccd.up.railway.app/product
+GET https://pizzaria-backend-production-bccd.up.railway.app/product/all
 Content-Type: application/json
 Authorization: Bearer {{token}}
