@@ -190,6 +190,23 @@ module.exports = {
   } catch (error) {
     return res.status(500).json({ error: "Erro no servidor", details: error.message })
   }
+},
+
+removeItem: async (req, res, db) => {
+  const { id } = req.query;      // pega ?id=...
+  if (!id) {
+    return res.status(400).json({ error: "ID do item obrigatório" });
+  }
+  try {
+    const deleted = await db("order").where({ id }).del();
+    if (!deleted) {
+      return res.status(404).json({ error: "Item não encontrado" });
+    }
+    return res.json({ removed: true });
+  } catch (err) {
+    console.error("Erro ao remover item:", err);
+    return res.status(500).json({ error: "Erro do servidor", details: err.message });
+  }
 }
 
 }
