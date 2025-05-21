@@ -186,7 +186,7 @@ Content-Type: application/json
 }
 
 ###
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdGUiLCJlbWFpbCI6InRlc3RlQGVtYWlsLmNvbSIsInN1YmplY3QiOjIsImlhdCI6MTc0Nzc2NzE2MiwiZXhwIjoxNzQ3ODUzNTYyfQ.0sAi29UjkYqII1C5D-KSFPX6daLdtamqu3JSp7HXibM
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdGUiLCJlbWFpbCI6InRlc3RlQGVtYWlsLmNvbSIsInN1YmplY3QiOjIsImlhdCI6MTc0Nzg0MjMyMywiZXhwIjoxNzQ3OTI4NzIzfQ.4P1_5p82D2_HyRvYtEetNb7_A0PYh1ibxzFpI1wbkwc
 POST https://pizzaria-backend-production-bccd.up.railway.app/users
 Content-Type: application/json
 
@@ -381,3 +381,10 @@ Authorization: Bearer {{token}}
 GET https://pizzaria-backend-production-bccd.up.railway.app/product/all
 Content-Type: application/json
 Authorization: Bearer {{token}}
+
+### Listar estoque
+DELETE https://pizzaria-backend-production-bccd.up.railway.app/order/item?id=5
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+

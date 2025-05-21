@@ -68,8 +68,8 @@ app.use('/login', authRoutes(knex));
 app.use('/userinfo', isAuth, detailsRoutes(knex));
 app.use('/category', isAuth, categoryRoutes(knex));
 app.use('/product', isAuth, productsRoutes(knex));
-app.use('/order', isAuth, ordersRoutes(knex));
 app.use('/order/item', isAuth, itemsRoutes(knex))
+app.use('/order', isAuth, ordersRoutes(knex));
 app.use('/order/details', isAuth, ordersDetailsRouter(knex));
 app.use('/stock', isAuth, stockRoutes(knex));
 app.use('/recipes', isAuth, recipesRoutes(knex));
