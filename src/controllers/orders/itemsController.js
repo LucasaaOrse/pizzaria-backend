@@ -50,39 +50,40 @@ module.exports = {
         }
       },          
 
-      removeItem: async (req, res, db) => {
-        const { id } = req.query;
-    
-        if (!id) {
-            return res.status(400).json({ error: "ID do item não informado" });
-        }
-    
-        try {
-            const item = await db("items").where({ id }).first();
-    
-            if (!item) {
-                return res.status(404).json({ error: "Item não encontrado" });
-            }
-    
-            if (item.amount > 1) {
-                await db("items")
-                    .where({ id })
-                    .update({ amount: item.amount - 1 });
-    
-                return res.status(200).json({
-                    message: "Quantidade reduzida com sucesso",
-                    id: item.order_id
-                });
-            }
-    
-            await db("items").where({ id }).del();
-    
-            return res.status(200).json({ message: "Item removido com sucesso" });
-    
-        } catch (error) {
-            return res.status(500).json({ error: "Erro ao remover item", details: error.message });
-        }
-    },
+      // controllers/orders/itemsController.js
+removeItem: async (req, res, db) => {
+  const id = Number(req.query.id);
+  if (!id) return res.status(400).json({ error: "ID do item não informado" });
+
+  try {
+    const item = await db("items").where({ id }).first();
+    if (!item) return res.status(404).json({ error: "Item não encontrado" });
+
+    if (item.amount > 1) {
+      const [updated] = await db("items")
+        .where({ id })
+        .update(
+          { amount: item.amount - 1, updated_at: new Date() },
+          ["id", "amount"] // returning
+        );
+      return res.json({
+        action: "decrement",
+        item_id: updated.id,
+        amount: updated.amount
+      });
+    } else {
+      await db("items").where({ id }).del();
+      return res.json({
+        action: "delete",
+        item_id: id
+      });
+    }
+  } catch (error) {
+    console.error("Erro ao remover item:", error);
+    return res.status(500).json({ error: "Erro ao remover item", details: error.message });
+  }
+},
+
 
     getAllItems: async (req, res,db) =>{
         try {
