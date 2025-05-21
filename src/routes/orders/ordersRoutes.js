@@ -36,10 +36,6 @@ module.exports = (db) =>{
     
     router.delete('/:order_id', async (req, res) =>{
         await OrderController.deleteOrder(req, res, db)
-    }),
-
-    router.delete("/remove", async (req, res) => {
-        await OrderController.removeItem(req, res, db);
     })
 
     return router
